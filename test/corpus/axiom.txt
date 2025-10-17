@@ -1,0 +1,157 @@
+===
+simple axiom
+===
+
+axm %core.whatever: Nat → Nat;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (function_type
+			(primitive_type)
+			(primitive_type))))
+
+===
+simple axiom with comment
+===
+
+axm %core.whatever: Nat → Nat; // test
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (function_type
+			(primitive_type)
+			(primitive_type)))
+	(line_comment))
+
+===
+simple axiom with trailing space
+===
+
+axm %core.whatever: Nat → Nat; 
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (function_type
+			(primitive_type)
+			(primitive_type))))
+
+=====
+axiom with subgroups
+=====
+
+axm %core.nat(add, sub, mul): «2; Nat» → Nat;
+
+---
+
+(source_file
+	(axiom
+		name: (annex (identifier) (identifier) (identifier))
+		type: (function_type
+			(array_type (num_literal) (primitive_type))
+			(primitive_type))))
+
+=====
+axiom with aliases
+=====
+
+axm %test.foo(blub = b = blb, krams = k): Nat;
+
+---
+
+(source_file
+	(axiom
+		name: (annex
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier))
+		type: (primitive_type)))
+
+=====
+axiom with normalizer
+=====
+
+axm %test.norm.alize: Nat, normalize;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (primitive_type)
+		normalizer: (identifier)))
+
+=====
+idx axiom
+=====
+
+axm %core.idx: [s: Nat] → [m: Nat] → [l: Nat] → Idx s, normalize_idx;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (function_type
+			(identifier)
+			(primitive_type)
+			(function_type
+				(identifier)
+				(primitive_type)
+				(function_type
+					(identifier)
+					(primitive_type)
+					(primitive_type (identifier)))))
+		normalizer: (identifier)))
+
+=====
+bit2 axiom
+=====
+
+axm %core.bit2( f,      nor, nciff, nfst, niff, nsnd, xor_, nand,
+                and_,  nxor,   snd,  iff,  fst, ciff,  or_,    t):
+    {s: Nat} → [m: Nat] → «2; Idx s» → Idx s , normalize_bit2;
+
+---
+
+(source_file
+	(axiom
+		name: (annex
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier)
+			(identifier))
+		type: (function_type
+			(identifier)
+			(primitive_type)
+			(function_type
+				(identifier)
+				(primitive_type)
+				(function_type
+					(array_type
+						(num_literal)
+						(primitive_type (identifier)))
+					(primitive_type (identifier)))))
+		normalizer: (identifier)))

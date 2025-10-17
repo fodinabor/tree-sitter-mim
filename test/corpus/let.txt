@@ -1,0 +1,103 @@
+=====
+comments
+=====
+
+// blub
+let x = 0;
+/// doc
+/* test
+ *
+ * some stuff
+ */
+let y = 1;
+
+---
+
+(source_file
+	(line_comment)
+	(let (identifier) (num_literal))
+	(doc_comment)
+	(block_comment)
+	(let (identifier) (num_literal)))
+
+=====
+let identifier
+=====
+
+let x = 0;
+
+---
+
+(source_file (let (identifier) (num_literal)))
+
+=====
+let annex
+=====
+
+let %core.mode.us = 0b00;
+
+---
+
+(source_file (let (annex) (num_literal)))
+
+=====
+let with comment
+=====
+
+let x = 0; // test
+
+---
+
+(source_file (let (identifier) (num_literal)) (line_comment))
+
+=====
+let with trailing space and additional line
+=====
+
+let x = 0; 
+
+let x = 0;
+
+---
+
+(source_file
+	(let (identifier) (num_literal))
+	(let (identifier) (num_literal)))
+
+=====
+let with trailing space
+=====
+
+let x = 0; 
+
+---
+
+(source_file (let (identifier) (num_literal)))
+
+=====
+let with useless whitespace
+=====
+
+	let		    x       =  0;
+
+---
+
+(source_file (let (identifier) (num_literal)))
+
+=====
+let behind axiom
+=====
+
+axm %core.ncmp.blub: Bool, normalize_ncmp;
+let %core.mode.us = 0b00;
+let %core.mode.uS = 0b01;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (primitive_type)
+		normalizer: (identifier))
+	(let (annex) value: (num_literal))
+	(let (annex) value: (num_literal)))

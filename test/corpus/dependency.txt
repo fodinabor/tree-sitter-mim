@@ -1,0 +1,71 @@
+=====
+single import
+=====
+
+import compile;
+
+---
+
+(source_file (import (identifier)))
+
+=====
+multiple import
+=====
+
+import mem;
+import compile;
+import foo;
+
+(source_file
+	(import (identifier))
+	(import (identifier))
+	(import (identifier))
+)
+
+=====
+single plugin
+=====
+
+plugin mem;
+
+---
+
+(source_file (plugin (identifier)))
+
+=====
+multiple plugins
+=====
+
+plugin mem;
+plugin core;
+plugin blub;
+
+---
+
+(source_file
+	(plugin (identifier))
+	(plugin (identifier))
+	(plugin (identifier))
+)
+
+=====
+mixed dependencies
+=====
+
+plugin mem;
+import compile;
+plugin core;
+import foo;
+plugin blub;
+
+---
+
+(source_file
+	(plugin (identifier))
+	(import (identifier))
+	(plugin (identifier))
+	(import (identifier))
+	(plugin (identifier))
+)
+
+

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "mim",
+      "camelcase": "Mim",
+      "title": "Mim",
+      "scope": "source.mim",
+      "file-types": [
+        "mim"
+      ],
+      "injection-regex": "^mim$",
+      "class-name": "TreeSitterMim"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Mim, the front-end language of MimIR",
+    "authors": [
+      {
+        "name": "Manuel Lata",
+        "email": "contact@mlata.me"
+      }
+    ],
+    "links": {
+      "repository": "https://gitlab.com/amaebe/dotfiles"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}

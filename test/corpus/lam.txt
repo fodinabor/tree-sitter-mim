@@ -1,0 +1,6 @@
+=====
+minus lam
+=====
+
+lam %core.minus {s: Nat} (m: Nat) (a: Idx s): Idx s = %core.wrap.sub m (0:(Idx s), a);
+
