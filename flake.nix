@@ -17,7 +17,9 @@
         ];
 
         nativeBuildInputs = with pkgs; [
-          tree-sitter
+          (tree-sitter.override {
+            webUISupport = true;
+          })
           graphviz
         ];
       in {
