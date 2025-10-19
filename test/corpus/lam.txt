@@ -1,6 +1,63 @@
 =====
-minus lam
+minus lam rhs
 =====
 
-lam %core.minus {s: Nat} (m: Nat) (a: Idx s): Idx s = %core.wrap.sub m (0:(Idx s), a);
+lam %core.minus: Idx s = (0:(Idx s), a);
 
+---
+
+(source_file
+	(lam
+		name: (annex)
+		type: (primitive_type (identifier))
+		value: (num_literal)
+		value: (primitive_type (identifier))
+		value: (identifier)))
+
+=====
+lam paren
+=====
+
+lam %core.minus (s: Nat) (a: Idx s): Idx s = 0;
+
+---
+
+(source_file
+	(lam
+		name: (annex)
+		(identifier) (primitive_type)
+		(identifier) (primitive_type (identifier))
+		type: (primitive_type (identifier))
+		value: (num_literal)))
+
+=====
+lam bracket
+=====
+
+lam %core.minus [s: Nat] (a: Idx s): Idx s = 0;
+
+---
+
+(source_file
+	(lam
+		name: (annex)
+		(identifier) (primitive_type)
+		(identifier) (primitive_type (identifier))
+		type: (primitive_type (identifier))
+		value: (num_literal)))
+
+=====
+lam brace
+=====
+
+lam %core.minus {s: Nat} (a: Idx s): Idx s = 0;
+
+---
+
+(source_file
+	(lam
+		name: (annex)
+		(identifier) (primitive_type)
+		(identifier) (primitive_type (identifier))
+		type: (primitive_type (identifier))
+		value: (num_literal)))
