@@ -54,18 +54,18 @@ module.exports = grammar({
       $.axiom,
     ),
 
-    let: $ => seq(
+    let: $ => prec(4, seq(
       "let",
       choice($._pattern, $.annex),
       "=",
       field("value", $._expression),
       ";",
-    ),
+    )),
 
     lam: $ => seq(
       "lam",
       field("name", $._name),
-      repeat($._pattern),
+      repeat($._surrounded_pattern),
       optional(
         seq(
           ":",
@@ -145,50 +145,31 @@ module.exports = grammar({
       ";",
     ),
 
-    _pattern: $ => choice(
-      prec.right(2, seq($.identifier, optional($._type_ann))),
-      seq(
-        /[\(\[\{]/,
-        repeat(
-          choice(
-            $._pattern,
-            seq(
-              $.identifier,
-              repeat1(seq(",", $.identifier)),
-              ":", $._expression
-            ),
-          )
-        ),
-        /[\)\]\}]/,
-      ),
-    ),
-
-    _expression: $ => prec.left(1, choice(
-      seq("(", $._expression, ")"),
-      $._type,
-      $._literal,
-      seq(/(.bot|⊥)/, optional($._type_ann)),
-      seq(/(.top|⊤)/, optional($._type_ann)),
-      $.identifier,
-      $.annex,
-      $._application,
-      seq("{", repeat($._declaration), $._expression, "}"),
-      seq(/(lam|λ)/, repeat($._pattern), optional($._type_ann), "=", $._expression),
-      seq("cn", repeat($._pattern), "=", $._expression),
-      seq("fn", repeat($._pattern), optional($._type_ann), "=", $._expression),
-      seq("ret", $._pattern, "=", $._expression, "$", $._expression, ";", repeat($._declaration), $._expression)
+    _pattern: $ => prec.right(2, choice(
+      seq($._expression, optional($._type_ann)),
     )),
 
-    _application: $ => choice(
-      prec.left(2, seq($._expression, $._expression)),
-      prec.left(2, seq($._expression, "@", $._expression)),
+    _surrounded_pattern: $ => seq(
+      /[\(\[\{]/,
+      choice(
+        $._pattern,
+        $._group,
+      ),
+      repeat(
+        seq(
+          ",",
+          choice(
+            $._pattern,
+            $._group,
+          )
+        )
+      ),
+      /[\)\]\}]/,
     ),
 
-    _literal: $ => choice(
-      $.bool_literal,
-      $.num_literal,
-      $.string_literal,
-      $.char_literal,
+    _group: $ => seq(
+      repeat1($.identifier),
+      ":", $._expression
     ),
 
     _symbol: $ => /[_a-zA-Z][_a-zA-Z0-9]*/,
@@ -209,7 +190,7 @@ module.exports = grammar({
     )),
 
     _subtags: $ => seq(
-      "(",
+      /\(/,
       $.identifier,
       repeat(
         seq(
@@ -264,14 +245,44 @@ module.exports = grammar({
 
     _type_ann: $ => seq(":", $._expression),
 
-    _type: $ => choice(
+    _expression: $ => prec.left(1, choice(
+      $._type,
+      $._literal,
+      seq(/(.bot|⊥)/, optional($._type_ann)),
+      seq(/(.top|⊤)/, optional($._type_ann)),
+      $.identifier,
+      $.annex,
+      $._application,
+      $._extraction,
+      $._surrounded_pattern,
+      seq(/\{/, repeat($._declaration), $._expression, "}"),
+      seq(/(lam|λ)/, repeat($._pattern), optional($._type_ann), "=", $._expression),
+      seq("cn", repeat($._pattern), "=", $._expression),
+      seq("fn", repeat($._pattern), optional($._type_ann), "=", $._expression),
+      seq("ret", $._pattern, "=", $._expression, "$", $._expression, ";", repeat($._declaration), $._expression)
+    )),
+
+    _application: $ => prec.left(1, choice(
+      seq($._expression, $._expression),
+      seq($._expression, "@", $._expression),
+    )),
+
+    _extraction: $ => prec.left(3, seq($._pattern, "#", $._expression)),
+
+    _literal: $ => choice(
+      $.bool_literal,
+      $.num_literal,
+      $.string_literal,
+      $.char_literal,
+    ),
+
+    _type: $ => prec(1, choice(
       $.primitive_type,
       $.function_type,
       $.array_type,
-      $._pattern,
       seq("Cn", $._pattern),
       seq("Fn", $._pattern, /(->|→)/, $._expression),
-    ),
+    )),
 
     primitive_type: $ => choice(
       "Univ",
@@ -279,13 +290,16 @@ module.exports = grammar({
       "*",
       "□",
       "Nat",
-      prec(3, seq("Idx", $._expression)),
+      prec(5, seq("Idx", $._expression)),
       "Bool",
     ),
 
     function_type: $ => prec.right(
-      2,
-      seq($._expression, /(->|→)/, $._expression),
+      4,
+      choice(
+        seq($._expression, /(->|→)/, $._expression),
+        seq($._pattern, /(->|→)/, $._expression),
+      )
     ),
 
     array_type: $ => seq(

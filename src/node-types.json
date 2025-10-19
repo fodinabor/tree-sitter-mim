@@ -138,15 +138,11 @@
         "required": false,
         "types": [
           {
+            "type": "#",
+            "named": false
+          },
+          {
             "type": "$",
-            "named": false
-          },
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
             "named": false
           },
           {
@@ -228,10 +224,6 @@
           {
             "type": "string_literal",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
           },
           {
             "type": "}",
@@ -270,15 +262,11 @@
         "required": false,
         "types": [
           {
+            "type": "#",
+            "named": false
+          },
+          {
             "type": "$",
-            "named": false
-          },
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
             "named": false
           },
           {
@@ -360,10 +348,6 @@
           {
             "type": "string_literal",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
           },
           {
             "type": "}",
@@ -397,15 +381,11 @@
         "required": false,
         "types": [
           {
+            "type": "#",
+            "named": false
+          },
+          {
             "type": "$",
-            "named": false
-          },
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
             "named": false
           },
           {
@@ -487,10 +467,6 @@
           {
             "type": "string_literal",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
           },
           {
             "type": "}",
@@ -503,15 +479,11 @@
         "required": false,
         "types": [
           {
+            "type": "#",
+            "named": false
+          },
+          {
             "type": "$",
-            "named": false
-          },
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
             "named": false
           },
           {
@@ -593,10 +565,6 @@
           {
             "type": "string_literal",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
           },
           {
             "type": "}",
@@ -700,15 +668,11 @@
         "required": false,
         "types": [
           {
+            "type": "#",
+            "named": false
+          },
+          {
             "type": "$",
-            "named": false
-          },
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
             "named": false
           },
           {
@@ -790,10 +754,6 @@
           {
             "type": "string_literal",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
           },
           {
             "type": "}",
@@ -806,15 +766,11 @@
         "required": false,
         "types": [
           {
+            "type": "#",
+            "named": false
+          },
+          {
             "type": "$",
-            "named": false
-          },
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
             "named": false
           },
           {
@@ -896,10 +852,6 @@
           {
             "type": "string_literal",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
           },
           {
             "type": "}",
@@ -964,15 +916,11 @@
         "required": false,
         "types": [
           {
+            "type": "#",
+            "named": false
+          },
+          {
             "type": "$",
-            "named": false
-          },
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
             "named": false
           },
           {
@@ -1054,10 +1002,6 @@
           {
             "type": "string_literal",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
           },
           {
             "type": "}",
@@ -1277,15 +1221,15 @@
     }
   },
   {
+    "type": "#",
+    "named": false
+  },
+  {
     "type": "$",
     "named": false
   },
   {
     "type": "%",
-    "named": false
-  },
-  {
-    "type": "(",
     "named": false
   },
   {
@@ -1427,10 +1371,6 @@
   },
   {
     "type": "tt",
-    "named": false
-  },
-  {
-    "type": "{",
     "named": false
   },
   {
