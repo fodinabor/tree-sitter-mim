@@ -16,7 +16,7 @@ const PUNCTUATION = [
 module.exports = grammar({
   name: "mim",
 
-  // word: $ => $.identifier,
+  word: $ => $._symbol,
 
   extras: ($) => [
     /\s/,
