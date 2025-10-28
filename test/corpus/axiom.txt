@@ -155,3 +155,27 @@ axm %core.bit2( f,      nor, nciff, nfst, niff, nsnd, xor_, nand,
 						(primitive_type (identifier)))
 					(primitive_type (identifier)))))
 		normalizer: (identifier)))
+
+=====
+mat axiom
+=====
+
+axm %matrix.Mat: [n: Nat, S: «n; Nat», T: *] → *;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (function_type
+			(identifier)
+			(primitive_type)
+			(identifier)
+			(array_type
+				(identifier)
+				(primitive_type))
+			(identifier)
+			(primitive_type)
+			(primitive_type))))
+
+
