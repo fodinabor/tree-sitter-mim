@@ -146,7 +146,8 @@ module.exports = grammar({
     ),
 
     _pattern: $ => prec.right(2, choice(
-      seq($._expression, optional($._type_ann)),
+      $._expression,
+      $._surrounded_pattern,
     )),
 
     _surrounded_pattern: $ => seq(
@@ -255,6 +256,7 @@ module.exports = grammar({
       $._application,
       $._extraction,
       $._surrounded_pattern,
+      $._annotated_expression,
       seq(/\{/, repeat($._declaration), $._expression, "}"),
       seq(/(lam|λ)/, repeat($._pattern), optional($._type_ann), "=", $._expression),
       seq("cn", repeat($._pattern), "=", $._expression),
@@ -262,19 +264,26 @@ module.exports = grammar({
       seq("ret", $._pattern, "=", $._expression, "$", $._expression, ";", repeat($._declaration), $._expression)
     )),
 
-    _application: $ => prec.left(1, choice(
+    _application: $ => prec.left(10, choice(
       seq($._expression, $._expression),
       seq($._expression, "@", $._expression),
     )),
 
     _extraction: $ => prec.left(3, seq($._pattern, "#", $._expression)),
 
-    _literal: $ => choice(
-      $.bool_literal,
-      $.num_literal,
-      $.string_literal,
-      $.char_literal,
-    ),
+    _annotated_expression: $ => prec.left(-1, seq(
+      $._expression, $._type_ann
+    )),
+
+    _literal: $ => prec.left(7, seq(
+      choice(
+        $.bool_literal,
+        $.num_literal,
+        $.string_literal,
+        $.char_literal,
+      ),
+      optional($._type_ann)
+    )),
 
     _type: $ => prec(1, choice(
       $.primitive_type,
@@ -298,7 +307,7 @@ module.exports = grammar({
       4,
       choice(
         seq($._expression, /(->|→)/, $._expression),
-        seq($._pattern, /(->|→)/, $._expression),
+        seq($._surrounded_pattern, /(->|→)/, $._expression),
       )
     ),
 
