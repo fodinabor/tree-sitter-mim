@@ -304,7 +304,7 @@ module.exports = grammar({
 
     array_type: $ => seq(
       choice("«", "⟪", "<<"),
-      $.num_literal,
+      $._expression,
       ";",
       $._expression,
       choice("»", "⟫", ">>"),
