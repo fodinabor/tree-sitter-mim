@@ -1,2 +1,21 @@
 lam %core.minus {s: Nat} (m: Nat) (a: Idx s): Idx s = %core.wrap.sub m (0:(Idx s), a);
 
+axm %core.div(sdiv, udiv, srem, urem):
+    {s: Nat} → [%mem.M, «2; Idx s»] → [%mem.M, Idx s], normalize_div;
+axm %core.icmp(xygle = f,  xyglE = e,   xygLe,      xygLE,
+               xyGle,      xyGlE,       xyGLe,      xyGLE,
+               xYgle,      xYglE,       xYgLe = sl, xYgLE = sle,
+               xYGle = ug, xYGlE = uge, xYGLe,      xYGLE,
+               Xygle,      XyglE,       XygLe = ul, XygLE = ule,
+               XyGle = sg, XyGlE = sge, XyGLe,      XyGLE,
+               XYgle,      XYglE,       XYgLe,      XYgLE,
+               XYGle,      XYGlE,       XYGLe = ne, XYGLE = t):
+    {s: Nat} → «2; Idx s» → Bool , normalize_icmp;
+axm %core.extrema(sm=umin, sM=umax, Sm=smin, SM=smax): {s: Nat} → «2; Idx s» → Idx s, normalize_extrema;
+axm %core.abs: {s: Nat} → [%mem.M, Idx s] → [%mem.M, Idx s], normalize_abs;
+axm %core.conv(s, u): {ss: Nat} → [ds: Nat] → Idx ss → Idx ds, normalize_conv;
+axm %core.bitcast: {S: *} → [D: *] → S → D, normalize_bitcast;
+axm %core.trait(size, align): * → Nat, normalize_trait;
+axm %core.pe(hlt, run):  {T: *} → T → T, normalize_pe;
+axm %core.pe(is_closed): {T: *} → T → Bool, normalize_pe;
+lam %core.select {T: *} (cond: Bool, t: T, f: T): T = (f, t)#cond;

@@ -48,8 +48,6 @@ module.exports = grammar({
     _declaration: $ => choice(
       $.let,
       $.lam,
-      $.con,
-      $.fun,
       $.sigma,
       $.axiom,
     ),
@@ -63,9 +61,10 @@ module.exports = grammar({
     )),
 
     lam: $ => seq(
-      "lam",
+      choice("lam", "con", "fun"),
+      optional("extern"),
       field("name", $._name),
-      repeat($._surrounded_pattern),
+      repeat(seq($._pattern, optional($.filter))),
       optional(
         seq(
           ":",
@@ -81,40 +80,12 @@ module.exports = grammar({
       ";",
     ),
 
-    con: $ => seq(
-      "con",
-      field("name", $.identifier),
-      // field("arguments", $._arguments),
-      optional(
-        seq(
-          "=",
-          field("value", $._expression),
-        )
-      ),
-      ";",
-    ),
-
-    fun: $ => seq(
-      "fun",
-      field("name", $.identifier),
-      // field("arguments", $._arguments),
-      optional(
-        seq(
-          ":",
-          field("type", $._expression),
-        )
-      ),
-      optional(
-        seq(
-          "=",
-          field("value", $._expression),
-        )
-      ),
-      ";",
-    ),
+    // TODO: make filter not get hidden by explicit application
+    filter: $ => seq("@", $._expression),
 
     sigma: $ => seq(
       "Sigma",
+      optional("extern"),
       field("name", $.identifier),
       optional($._type_ann),
       optional(
@@ -258,10 +229,7 @@ module.exports = grammar({
       $._surrounded_pattern,
       $._annotated_expression,
       seq(/\{/, repeat($._declaration), $._expression, "}"),
-      seq(/(lam|λ)/, repeat($._pattern), optional($._type_ann), "=", $._expression),
-      seq("cn", repeat($._pattern), "=", $._expression),
-      seq("fn", repeat($._pattern), optional($._type_ann), "=", $._expression),
-      seq("ret", $._pattern, "=", $._expression, "$", $._expression, ";", repeat($._declaration), $._expression)
+      $.lam_expression,
     )),
 
     _application: $ => prec.left(10, choice(
@@ -274,6 +242,19 @@ module.exports = grammar({
     _annotated_expression: $ => prec.left(-1, seq(
       $._expression, $._type_ann
     )),
+
+    lam_expression: $ => seq(
+      choice("lam", "λ", "cn", "fn", "ret"),
+      repeat(seq($._pattern, optional($.filter))),
+      optional(
+        seq(
+          ":",
+          field("type", $._expression),
+        )
+      ),
+      "=",
+      field("value", $._expression),
+    ),
 
     _literal: $ => prec.left(7, seq(
       choice(
@@ -289,8 +270,7 @@ module.exports = grammar({
       $.primitive_type,
       $.function_type,
       $.array_type,
-      seq("Cn", $._pattern),
-      seq("Fn", $._pattern, /(->|→)/, $._expression),
+      $.pack,
     )),
 
     primitive_type: $ => choice(
@@ -307,7 +287,8 @@ module.exports = grammar({
       4,
       choice(
         seq($._expression, /(->|→)/, $._expression),
-        seq($._surrounded_pattern, /(->|→)/, $._expression),
+        seq("Cn", $._pattern),
+        seq("Fn", $._pattern, /(->|→)/, $._expression),
       )
     ),
 
@@ -317,6 +298,14 @@ module.exports = grammar({
       ";",
       $._expression,
       choice("»", "⟫", ">>"),
+    ),
+
+    pack: $ => seq(
+      choice("‹", "⟨", "<"),
+      $._expression,
+      ";",
+      $._expression,
+      choice("›", "⟩", ">"),
     ),
 
     line_comment: $ => /\/\/([^/].*)?/,

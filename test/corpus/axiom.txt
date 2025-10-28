@@ -178,4 +178,67 @@ axm %matrix.Mat: [n: Nat, S: «n; Nat», T: *] → *;
 			(primitive_type)
 			(primitive_type))))
 
+=====
+mat map reduce
+=====
+
+axm %matrix.map_reduce:
+    [
+        n: Nat, S: «n; Nat», T: *,
+        m: Nat,
+        NI: «m; Nat»,
+        TI: «m; *»,
+        SI: «i:m; «NI#i; Nat»»
+    ]
+  → [
+        mem:    %mem.M,
+        zero:   T,
+        comb:   Fn [%mem.M, T, «i: m; TI#i»] → [%mem.M, T],
+        input:  «i: m; [«NI#i; Nat», %matrix.Mat (NI#i, SI#i, TI#i)]»
+    ] → [%mem.M, %matrix.Mat (n, S, T)],
+    normalize_map_reduce;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (function_type
+			(identifier) (primitive_type)
+			(identifier) (array_type (identifier) (primitive_type))
+			(identifier) (primitive_type)
+			(identifier) (primitive_type)
+			(identifier) (array_type (identifier) (primitive_type))
+			(identifier) (array_type (identifier) (primitive_type))
+			(identifier) (array_type
+				(identifier)
+				(identifier)
+				(array_type
+					(identifier)
+					(identifier)
+					(primitive_type)))
+
+			(function_type
+				(identifier) (annex)
+				(identifier) (identifier)
+				(identifier) (function_type
+					(annex)
+					(identifier)
+					(array_type
+						(identifier)
+						(identifier)
+						(identifier) (identifier))
+					(annex) (identifier))
+				(identifier) (array_type
+					(identifier) (identifier)
+					(array_type
+						(identifier) (identifier)
+						(primitive_type))
+					(annex)
+					(identifier) (identifier)
+					(identifier) (identifier)
+					(identifier) (identifier))
+				(annex) (annex) (identifier) (identifier) (identifier)))
+		normalizer: (identifier)))
+				
 
