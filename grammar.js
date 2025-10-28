@@ -54,7 +54,7 @@ module.exports = grammar({
 
     let: $ => prec(4, seq(
       "let",
-      choice($._pattern, $.annex),
+      choice($._expression, $.annex),
       "=",
       field("value", $._expression),
       ";",
@@ -64,7 +64,7 @@ module.exports = grammar({
       choice("lam", "con", "fun"),
       optional("extern"),
       field("name", $._name),
-      repeat(seq($._pattern, optional($.filter))),
+      repeat(seq($._expression, optional($.filter))),
       optional(
         seq(
           ":",
@@ -116,22 +116,17 @@ module.exports = grammar({
       ";",
     ),
 
-    _pattern: $ => prec.right(2, choice(
-      $._expression,
-      $._surrounded_pattern,
-    )),
-
-    _surrounded_pattern: $ => seq(
+    _pattern: $ => seq(
       /[\(\[\{]/,
       choice(
-        $._pattern,
+        $._expression,
         $._group,
       ),
       repeat(
         seq(
           ",",
           choice(
-            $._pattern,
+            $._expression,
             $._group,
           )
         )
@@ -226,7 +221,7 @@ module.exports = grammar({
       $.annex,
       $._application,
       $._extraction,
-      $._surrounded_pattern,
+      $._pattern,
       $._annotated_expression,
       seq(/\{/, repeat($._declaration), $._expression, "}"),
       $.lam_expression,
@@ -237,7 +232,7 @@ module.exports = grammar({
       seq($._expression, "@", $._expression),
     )),
 
-    _extraction: $ => prec.left(3, seq($._pattern, "#", $._expression)),
+    _extraction: $ => prec.left(3, seq($._expression, "#", $._expression)),
 
     _annotated_expression: $ => prec.left(-1, seq(
       $._expression, $._type_ann
@@ -245,7 +240,7 @@ module.exports = grammar({
 
     lam_expression: $ => seq(
       choice("lam", "λ", "cn", "fn", "ret"),
-      repeat(seq($._pattern, optional($.filter))),
+      prec(15, repeat(seq($._expression, optional($.filter)))),
       optional(
         seq(
           ":",
@@ -287,8 +282,8 @@ module.exports = grammar({
       4,
       choice(
         seq($._expression, /(->|→)/, $._expression),
-        seq("Cn", $._pattern),
-        seq("Fn", $._pattern, /(->|→)/, $._expression),
+        seq("Cn", $._expression),
+        prec(5, seq("Fn", $._expression, /(->|→)/, $._expression)),
       )
     ),
 
