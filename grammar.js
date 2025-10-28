@@ -81,7 +81,7 @@ module.exports = grammar({
     ),
 
     // TODO: make filter not get hidden by explicit application
-    filter: $ => seq("@", $._expression),
+    filter: $ => prec.left(15, seq("@", $._expression)),
 
     sigma: $ => seq(
       "Sigma",
@@ -240,7 +240,7 @@ module.exports = grammar({
 
     lam_expression: $ => seq(
       choice("lam", "λ", "cn", "fn", "ret"),
-      prec(15, repeat(seq($._expression, optional($.filter)))),
+      repeat(seq($._expression, optional($.filter))),
       optional(
         seq(
           ":",
