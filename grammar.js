@@ -225,6 +225,7 @@ module.exports = grammar({
       $._annotated_expression,
       seq(/\{/, repeat($._declaration), $._expression, "}"),
       $.lam_expression,
+      seq($._declaration, $._expression),
     )),
 
     _application: $ => prec.left(10, choice(
