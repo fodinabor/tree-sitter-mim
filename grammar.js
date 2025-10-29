@@ -94,12 +94,12 @@ module.exports = grammar({
           field("arity", $.num_literal),
         )
       ),
-      // optional(
-      //   seq(
-      //     "=",
-      //     field("value", $.bracket_pattern),
-      //   )
-      // ),
+      optional(
+        seq(
+          "=",
+          field("value", $._pattern),
+        )
+      ),
     ),
 
     axiom: $ => seq(
