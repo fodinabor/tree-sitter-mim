@@ -113,6 +113,18 @@ module.exports = grammar({
           field("normalizer", $.identifier),
         )
       ),
+      optional(
+        seq(
+          ",",
+          field("curry", $.num_literal),
+          optional(
+            seq(
+              ",",
+              field("trip", $.num_literal),
+            )
+          ),
+        )
+      ),
       ";",
     ),
 

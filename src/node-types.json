@@ -113,6 +113,16 @@
     "type": "axiom",
     "named": true,
     "fields": {
+      "curry": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "num_literal",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -129,6 +139,16 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "trip": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "num_literal",
             "named": true
           }
         ]
