@@ -240,5 +240,28 @@ axm %matrix.map_reduce:
 					(identifier) (identifier))
 				(annex) (annex) (identifier) (identifier) (identifier)))
 		normalizer: (identifier)))
-				
+
+=====
+dot 2d
+=====
+
+axm %tensor.dot_2d_00: {R: Ring} → {m: Nat, k: Nat, l: Nat} → [t1: «m, k; R#T», t2: «k, l; R#T»] → «m, l; R#T»;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (function_type
+			(identifier) (identifier)
+			(function_type
+				(identifier) (primitive_type)
+				(identifier) (primitive_type)
+				(identifier) (primitive_type)
+				(function_type
+					(identifier) (array_type
+						(identifier) (identifier) (identifier) (identifier))
+					(identifier) (array_type
+						(identifier) (identifier) (identifier) (identifier))
+					(array_type (identifier) (identifier) (identifier) (identifier)))))))
 
