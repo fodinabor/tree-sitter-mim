@@ -1,95 +1,4 @@
 =====
-internal diff icmp fun
-=====
-
-fun extern internal_diff_core_icmp_xYgLE {s: Nat} (ab: «2; Idx s»)@tt: [Bool, Cn[Bool, Cn«2; Idx s»]] =
-    return (%core.icmp.sle ab, fn [Bool]@tt: «2; Idx s» = return ‹2; 0:(Idx s)›);
-
----
-
-(source_file
-	(lam
-		name: (identifier)
-		(identifier)
-		(primitive_type)
-		(identifier)
-		(array_type
-			(num_literal)
-			(primitive_type (identifier)))
-		(filter (bool_literal))
-		type: (primitive_type)
-		type: (function_type
-			(primitive_type)
-			(function_type
-				(array_type
-					(num_literal)
-					(primitive_type (identifier)))))
-		value: (identifier)
-		value: (annex)
-		value: (identifier)
-		value: (lam_expression
-			(primitive_type)
-			(filter (bool_literal))
-			type: (array_type
-				(num_literal)
-				(primitive_type (identifier)))
-			value: (identifier)
-			value: (pack
-				(num_literal)
-				(num_literal)
-				(primitive_type (identifier))))))
-
-=====
-internal diff wrap mul
-=====
-
-fun extern internal_diff_core_wrap_mul {s: Nat} (m: Nat) (a b: Idx s) as ab@tt: [Idx s, Cn[Idx s, Cn«2; Idx s»]] =
-    return (%core.wrap.mul m ab, fn (i: Idx s)@tt: «2; Idx s» = return (%core.wrap.mul m (i, b), %core.wrap.mul m (i, a)));
-
----
-
-(source_file
-	(lam
-		name: (identifier)
-		(identifier)
-		(primitive_type)
-		(identifier)
-		(primitive_type)
-		(identifier)
-		(identifier)
-		(primitive_type (identifier))
-		(identifier)
-		(identifier)
-		(filter (bool_literal))
-		type: (primitive_type (identifier))
-		type: (function_type
-			(primitive_type (identifier))
-			(function_type
-				(array_type
-					(num_literal)
-					(primitive_type (identifier)))))
-		value: (identifier)
-		value: (annex)
-		value: (identifier)
-		value: (identifier)
-		value: (lam_expression
-			(identifier)
-			(primitive_type (identifier))
-			(filter (bool_literal))
-			type: (array_type
-				(num_literal)
-				(primitive_type (identifier)))
-			value: (identifier)
-			value: (annex)
-			value: (identifier)
-			value: (identifier)
-			value: (identifier)
-			value: (annex)
-			value: (identifier)
-			value: (identifier)
-			value: (identifier))))
-
-=====
 fun with filter
 =====
 
@@ -100,7 +9,6 @@ fun with_filter x@tt = return 0;
 (source_file
 	(lam
 		name: (identifier)
-		(identifier)
+		(pattern (identifier))
 		(filter (bool_literal))
-		value: (identifier)
-		value: (num_literal)))
+		value: (application (identifier) (num_literal))))

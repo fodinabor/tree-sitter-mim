@@ -56,7 +56,9 @@ axm %core.nat(add, sub, mul): «2; Nat» → Nat;
 	(axiom
 		name: (annex (identifier) (identifier) (identifier))
 		type: (function_type
-			(array_type (num_literal) (primitive_type))
+			(array_type
+				size: (num_literal)
+				type: (primitive_type))
 			(primitive_type))))
 
 =====
@@ -103,14 +105,11 @@ axm %core.idx: [s: Nat] → [m: Nat] → [l: Nat] → Idx s, normalize_idx;
 	(axiom
 		name: (annex)
 		type: (function_type
-			(identifier)
-			(primitive_type)
+			(pattern (pattern (identifier) type: (primitive_type)))
 			(function_type
-				(identifier)
-				(primitive_type)
+				(pattern (pattern (identifier) type: (primitive_type)))
 				(function_type
-					(identifier)
-					(primitive_type)
+					(pattern (pattern (identifier) type: (primitive_type)))
 					(primitive_type (identifier)))))
 		normalizer: (identifier)))
 
@@ -144,15 +143,13 @@ axm %core.bit2( f,      nor, nciff, nfst, niff, nsnd, xor_, nand,
 			(identifier)
 			(identifier))
 		type: (function_type
-			(identifier)
-			(primitive_type)
+			(pattern (pattern (identifier) type: (primitive_type)))
 			(function_type
-				(identifier)
-				(primitive_type)
+				(pattern (pattern (identifier) type: (primitive_type)))
 				(function_type
 					(array_type
-						(num_literal)
-						(primitive_type (identifier)))
+						size: (num_literal)
+						type: (primitive_type (identifier)))
 					(primitive_type (identifier)))))
 		normalizer: (identifier)))
 
@@ -168,15 +165,27 @@ axm %matrix.Mat: [n: Nat, S: «n; Nat», T: *] → *;
 	(axiom
 		name: (annex)
 		type: (function_type
-			(identifier)
-			(primitive_type)
-			(identifier)
-			(array_type
-				(identifier)
-				(primitive_type))
-			(identifier)
-			(primitive_type)
+			(pattern
+				(pattern (identifier) type: (primitive_type))
+				(pattern (identifier)
+					type: (array_type size: (identifier) type: (primitive_type)))
+				(pattern (identifier) type: (primitive_type)))
 			(primitive_type))))
+
+=====
+annotated expression in array size
+=====
+
+axm %test.blub.ding: <<a: b; Nat>>;
+
+---
+
+(source_file
+	(axiom
+		name: (annex)
+		type: (array_type
+			size: (annotated value: (identifier) type: (identifier))
+			type: (primitive_type))))
 
 =====
 mat map reduce
@@ -204,64 +213,52 @@ axm %matrix.map_reduce:
 	(axiom
 		name: (annex)
 		type: (function_type
-			(identifier) (primitive_type)
-			(identifier) (array_type (identifier) (primitive_type))
-			(identifier) (primitive_type)
-			(identifier) (primitive_type)
-			(identifier) (array_type (identifier) (primitive_type))
-			(identifier) (array_type (identifier) (primitive_type))
-			(identifier) (array_type
-				(identifier)
-				(identifier)
-				(array_type
-					(identifier)
-					(identifier)
-					(primitive_type)))
-
+			(pattern
+				(pattern (identifier) type: (primitive_type))
+				(pattern (identifier) type: (array_type size: (identifier) type: (primitive_type)))
+				(pattern (identifier) type: (primitive_type))
+				(pattern (identifier) type: (primitive_type))
+				(pattern (identifier)
+					type: (array_type size: (identifier) type: (primitive_type)))
+				(pattern (identifier)
+					type: (array_type size: (identifier) type: (primitive_type)))
+				(pattern (identifier)
+					type: (array_type
+						size: (annotated value: (identifier) type: (identifier))
+						type: (array_type
+							size: (extraction (identifier) (identifier))
+							type: (primitive_type)))))
 			(function_type
-				(identifier) (annex)
-				(identifier) (identifier)
-				(identifier) (function_type
-					(annex)
-					(identifier)
-					(array_type
-						(identifier)
-						(identifier)
-						(identifier) (identifier))
-					(annex) (identifier))
-				(identifier) (array_type
-					(identifier) (identifier)
-					(array_type
-						(identifier) (identifier)
-						(primitive_type))
-					(annex)
-					(identifier) (identifier)
-					(identifier) (identifier)
-					(identifier) (identifier))
-				(annex) (annex) (identifier) (identifier) (identifier)))
+				(pattern
+					(pattern (identifier) type: (annex))
+					(pattern (identifier) type: (identifier))
+					(pattern (identifier)
+						type: (function_type
+							(pattern type: (annex) type: (identifier)
+								type: (array_type
+									size: (annotated value: (identifier) type: (identifier))
+									type: (extraction (identifier) (identifier))))
+							(tuple (annex) (identifier))))
+					(pattern (identifier)
+						type: (array_type
+							size: (annotated value: (identifier) type: (identifier))
+							type: (tuple
+								(array_type
+									size: (extraction (identifier) (identifier))
+									type: (primitive_type))
+								(application
+									(annex)
+									(tuple
+										(extraction (identifier) (identifier))
+										(extraction (identifier) (identifier))
+										(extraction (identifier) (identifier))))))))
+					(tuple
+						(annex)
+						(application
+							(annex)
+							(tuple
+								(identifier)
+								(identifier)
+								(identifier))))))
 		normalizer: (identifier)))
-
-=====
-dot 2d
-=====
-
-axm %tensor.dot_2d_00: {R: Ring} → {m: Nat, k: Nat, l: Nat} → [t1: «m, k; R#T», t2: «k, l; R#T»] → «m, l; R#T»;
-
----
-
-(source_file
-	(axiom
-		name: (annex)
-		type: (function_type
-			(identifier) (identifier)
-			(function_type
-				(identifier) (primitive_type)
-				(identifier) (primitive_type)
-				(identifier) (primitive_type)
-				(function_type
-					(identifier) (array_type
-						(identifier) (identifier) (identifier) (identifier))
-					(identifier) (array_type
-						(identifier) (identifier) (identifier) (identifier))
-					(array_type (identifier) (identifier) (identifier) (identifier)))))))
 
