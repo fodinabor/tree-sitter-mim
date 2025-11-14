@@ -122,3 +122,17 @@ declaration in codomain
 =====
 
 let x: [R: Ring] -> let a = 3; <<a; Nat>> = 0;
+
+---
+
+(source_file
+	(let
+		(pattern (identifier)
+			type: (function_type
+				(pattern (pattern (identifier) type: (identifier)))
+				(block
+					(let (pattern (identifier)) value: (num_literal))
+					(array_type
+						size: (identifier)
+						type: (primitive_type)))))
+		value: (num_literal)))

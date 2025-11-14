@@ -661,10 +661,6 @@
         {
           "type": "_dependency",
           "named": true
-        },
-        {
-          "type": "_expression",
-          "named": true
         }
       ]
     }

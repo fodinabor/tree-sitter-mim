@@ -19,18 +19,6 @@
             "type": "SYMBOL",
             "name": "_declaration"
           }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_expression"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
         }
       ]
     },
@@ -984,28 +972,24 @@
       ]
     },
     "block": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "PATTERN",
-          "value": "\\{"
-        },
-        {
-          "type": "REPEAT",
-          "content": {
+      "type": "PREC",
+      "value": -10,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "REPEAT1",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_declaration"
+            }
+          },
+          {
             "type": "SYMBOL",
-            "name": "_declaration"
+            "name": "_expression"
           }
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_expression"
-        },
-        {
-          "type": "STRING",
-          "value": "}"
-        }
-      ]
+        ]
+      }
     },
     "application": {
       "type": "CHOICE",
@@ -1668,15 +1652,8 @@
       "_expression"
     ],
     [
-      "pattern",
-      "_type_annotation"
-    ],
-    [
       "group",
       "_expression"
-    ],
-    [
-      "pattern"
     ]
   ],
   "precedences": [],

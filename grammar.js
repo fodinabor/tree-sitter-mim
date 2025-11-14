@@ -35,16 +35,13 @@ module.exports = grammar({
   conflicts: $ => [
     [$.pattern, $.tuple],
     [$.pattern, $._expression],
-    [$.pattern, $._type_annotation],
     [$.group, $._expression],
-    [$.pattern],
   ],
 
   rules: {
     source_file: $ => seq(
       repeat($._dependency),
       repeat($._declaration),
-      optional($._expression),
     ),
 
     _dependency: $ => choice(
@@ -283,12 +280,10 @@ module.exports = grammar({
       $.tuple,
     ),
 
-    block: $ => seq(
-      /\{/,
-      repeat($._declaration),
+    block: $ => prec(-10, seq(
+      repeat1($._declaration),
       $._expression,
-      "}"
-    ),
+    )),
 
     application: $ => choice(
       prec.left(-2, seq($._expression, $._expression)),
