@@ -101,7 +101,7 @@
     },
     "let": {
       "type": "PREC",
-      "value": 1,
+      "value": 10,
       "content": {
         "type": "SEQ",
         "members": [
@@ -139,7 +139,7 @@
     },
     "lam": {
       "type": "PREC_LEFT",
-      "value": 1,
+      "value": 10,
       "content": {
         "type": "SEQ",
         "members": [
@@ -686,21 +686,17 @@
       "value": "[_a-zA-Z][_a-zA-Z0-9]*"
     },
     "_name": {
-      "type": "PREC",
-      "value": 1,
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "identifier"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "annex"
-          }
-        ]
-      }
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "annex"
+        }
+      ]
     },
     "identifier": {
       "type": "SYMBOL",
@@ -1009,7 +1005,7 @@
     },
     "block": {
       "type": "PREC",
-      "value": -10,
+      "value": -1,
       "content": {
         "type": "SEQ",
         "members": [
@@ -1045,7 +1041,7 @@
       "members": [
         {
           "type": "PREC_LEFT",
-          "value": -1,
+          "value": 4,
           "content": {
             "type": "SEQ",
             "members": [
@@ -1062,7 +1058,7 @@
         },
         {
           "type": "PREC_LEFT",
-          "value": -2,
+          "value": 3,
           "content": {
             "type": "SEQ",
             "members": [
@@ -1085,7 +1081,7 @@
     },
     "extraction": {
       "type": "PREC_LEFT",
-      "value": -3,
+      "value": 5,
       "content": {
         "type": "SEQ",
         "members": [
@@ -1106,7 +1102,7 @@
     },
     "annotated": {
       "type": "PREC_LEFT",
-      "value": -5,
+      "value": 2,
       "content": {
         "type": "SEQ",
         "members": [
@@ -1144,7 +1140,7 @@
     },
     "lambda": {
       "type": "PREC",
-      "value": 1,
+      "value": 11,
       "content": {
         "type": "SEQ",
         "members": [
@@ -1323,7 +1319,7 @@
     },
     "where": {
       "type": "PREC",
-      "value": -6,
+      "value": 10,
       "content": {
         "type": "SEQ",
         "members": [
@@ -1403,8 +1399,8 @@
           "value": "Nat"
         },
         {
-          "type": "PREC",
-          "value": 5,
+          "type": "PREC_LEFT",
+          "value": 4,
           "content": {
             "type": "SEQ",
             "members": [

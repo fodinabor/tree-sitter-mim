@@ -7,6 +7,17 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+const PREC = {
+  block: -1,
+  fun: 1,
+  ann: 2,
+  eapp: 3,
+  app: 4,
+  ext: 5,
+  def: 10,
+  lam: 11,
+};
+
 const PUNCTUATION = [
   "(", ")", "[", "]", "{", "}",
   "‹", "›", "«", "»", "<<", ">>", "<", ">",
@@ -60,14 +71,14 @@ module.exports = grammar({
       $.axiom,
     ),
 
-    let: $ => prec(1, seq(
+    let: $ => prec(PREC.def, seq(
       "let",
       choice($.pattern, $.annex),
       "=",
       field("value", $._expression),
     )),
 
-    lam: $ => prec.left(1, seq(
+    lam: $ => prec.left(PREC.def, seq(
       choice("lam", "con", "fun"),
       optional("extern"),
       field("name", $._name),
@@ -190,7 +201,7 @@ module.exports = grammar({
 
     _symbol: $ => /[_a-zA-Z][_a-zA-Z0-9]*/,
 
-    _name: $ => prec(1, choice($.identifier, $.annex)),
+    _name: $ => choice($.identifier, $.annex),
 
     identifier: $ => $._symbol,
 
@@ -287,27 +298,27 @@ module.exports = grammar({
       $.where,
     ),
 
-    block: $ => prec(-10, seq(
+    block: $ => prec(PREC.block, seq(
       $._declaration,
       repeat(choice($._declaration, ";")),
       $._expression,
     )),
 
     application: $ => choice(
-      prec.left(-1, seq($._expression, $._expression)),
-      prec.left(-2, seq($._expression, "@", $._expression)),
+      prec.left(PREC.app, seq($._expression, $._expression)),
+      prec.left(PREC.eapp, seq($._expression, "@", $._expression)),
     ),
 
-    extraction: $ => prec.left(-3, seq($._expression, "#", $._expression)),
+    extraction: $ => prec.left(PREC.ext, seq($._expression, "#", $._expression)),
 
-    annotated: $ => prec.left(-5, seq(
+    annotated: $ => prec.left(PREC.ann, seq(
       field("value", $._expression),
       $._type_annotation,
     )),
 
     _type_annotation: $ => seq(":", field("type", $._expression)),
 
-    lambda: $ => prec(1, seq(
+    lambda: $ => prec(PREC.lam, seq(
       choice("lm", "λ", "cn", "fn", "ret"),
       repeat(seq($.pattern, optional($.filter))),
       optional(
@@ -332,7 +343,7 @@ module.exports = grammar({
       choice(")", "]", "}"),
     ),
 
-    where: $ => prec(-6, seq(
+    where: $ => prec(PREC.def, seq(
       $._expression,
       "where",
       repeat($._declaration),
@@ -352,7 +363,7 @@ module.exports = grammar({
       "*",
       "□",
       "Nat",
-      prec(5, seq("Idx", $._expression)),
+      prec.left(PREC.app, seq("Idx", $._expression)),
       "Bool",
     ),
 

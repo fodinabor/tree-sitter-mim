@@ -62,8 +62,9 @@ let x = (0, 0)#foo 2;
 	(let
 		(pattern
 			(identifier))
-		value: (extraction
-			(tuple (int_literal) (int_literal))
-			(application (identifier) (int_literal)))))
+		value: (application
+			(extraction
+				(tuple (int_literal) (int_literal)) (identifier))
+				(int_literal))))
 
 
