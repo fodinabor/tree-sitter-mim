@@ -7,7 +7,7 @@ let x: Nat = 0;
 ---
 
 (source_file
-	(let (pattern (identifier) type: (primitive_type)) value: (num_literal)))
+	(let (pattern (identifier) type: (primitive_type)) value: (int_literal)))
 
 =====
 nat type bin
@@ -18,7 +18,7 @@ let x: Nat = 0b1011;
 ---
 
 (source_file
-	(let (pattern (identifier) type: (primitive_type)) value: (num_literal)))
+	(let (pattern (identifier) type: (primitive_type)) value: (int_literal)))
 
 =====
 nat type nex
@@ -29,7 +29,7 @@ let x: Nat = 0xaff0;
 ---
 
 (source_file
-	(let (pattern (identifier) type: (primitive_type)) value: (num_literal)))
+	(let (pattern (identifier) type: (primitive_type)) value: (int_literal)))
 
 =====
 idx type
@@ -49,7 +49,7 @@ let x: Nat -> Nat = 0;
 	(let
 		(pattern (identifier)
 			type: (function_type (primitive_type) (primitive_type)))
-		value: (num_literal)))
+		value: (int_literal)))
 
 =====
 array type
@@ -63,8 +63,8 @@ let x: <<2; Nat>> = 0;
 	(let
 		(pattern
 			(identifier)
-			type: (array_type size: (num_literal) type: (primitive_type)))
-		value: (num_literal)))
+			type: (array_type size: (int_literal) type: (primitive_type)))
+		value: (int_literal)))
 
 =====
 function array type
@@ -78,9 +78,9 @@ let x: <<2; Nat>> -> «3; Bool» = 0;
 	(let
 		(pattern (identifier)
 			type: (function_type
-				(array_type size: (num_literal) type: (primitive_type))
-				(array_type size: (num_literal) type: (primitive_type))))
-		value: (num_literal)))
+				(array_type size: (int_literal) type: (primitive_type))
+				(array_type size: (int_literal) type: (primitive_type))))
+		value: (int_literal)))
 
 =====
 nested function type
@@ -97,9 +97,9 @@ let x: Nat -> Idx 8 -> * = 0;
 				(primitive_type)
 				(function_type
 					(primitive_type
-						(num_literal))
+						(int_literal))
 					(primitive_type))))
-		value: (num_literal)))
+		value: (int_literal)))
 
 =====
 dependent type
@@ -115,7 +115,7 @@ let x: [s: Nat] -> Idx s = 0;
 			type: (function_type
 				(pattern (pattern (identifier) type: (primitive_type)))
 				(primitive_type (identifier))))
-		value: (num_literal)))
+		value: (int_literal)))
 
 =====
 declaration in codomain
@@ -131,8 +131,8 @@ let x: [R: Ring] -> let a = 3; <<a; Nat>> = 0;
 			type: (function_type
 				(pattern (pattern (identifier) type: (identifier)))
 				(block
-					(let (pattern (identifier)) value: (num_literal))
+					(let (pattern (identifier)) value: (int_literal))
 					(array_type
 						size: (identifier)
 						type: (primitive_type)))))
-		value: (num_literal)))
+		value: (int_literal)))

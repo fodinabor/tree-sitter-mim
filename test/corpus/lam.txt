@@ -13,7 +13,7 @@ lam %core.minus: Idx s = (0:(Idx s), a);
 		value:
 			(tuple
 				(annotated
-					value: (num_literal)
+					value: (int_literal)
 					type: (tuple (primitive_type (identifier))))
 				(identifier))))
 
@@ -31,7 +31,7 @@ lam %core.minus (s: Nat) (a: Idx s): Idx s = 0;
 		(pattern (pattern (identifier) type: (primitive_type)))
 		(pattern (pattern (identifier) type: (primitive_type (identifier))))
 		type: (primitive_type (identifier))
-		value: (num_literal)))
+		value: (int_literal)))
 
 =====
 lam bracket
@@ -46,7 +46,7 @@ lam %core.minus [s: Nat]: Idx s = 0;
 		name: (annex)
 		(pattern (pattern (identifier) type: (primitive_type)))
 		type: (primitive_type (identifier))
-		value: (num_literal)))
+		value: (int_literal)))
 
 =====
 lam brace
@@ -62,7 +62,7 @@ lam %core.minus {s: Nat} (a: Idx s): Idx s = 0;
 		(pattern (pattern (identifier) type: (primitive_type)))
 		(pattern (pattern (identifier) type: (primitive_type (identifier))))
 		type: (primitive_type (identifier))
-		value: (num_literal)))
+		value: (int_literal)))
 
 =====
 1-tuple expression
@@ -76,4 +76,4 @@ lam foo: Nat = (3);
 	(lam
 		name: (identifier)
 		type: (primitive_type)
-		value: (tuple (num_literal))))
+		value: (tuple (int_literal))))

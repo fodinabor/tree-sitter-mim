@@ -1,0 +1,69 @@
+=====
+annotated
+=====
+
+let x = 3: Idx 4;
+
+---
+
+(source_file
+	(let
+		(pattern
+			(identifier))
+		value: (annotated
+			value: (int_literal)
+			type: (primitive_type (int_literal)))))
+
+=====
+application
+=====
+
+let x = foo bar 0;
+
+---
+
+(source_file
+	(let
+		(pattern
+			(identifier))
+		value: (application
+			(application
+				(identifier)
+				(identifier))
+			(int_literal))))
+
+=====
+explicit application
+=====
+
+let x = foo @ bar 0;
+
+---
+
+(source_file
+	(let
+		(pattern
+			(identifier))
+		value: (application
+			(identifier)
+			(application
+				(identifier)
+				(int_literal)))))
+
+=====
+extraction
+=====
+
+let x = (0, 0)#foo 2;
+
+---
+
+(source_file
+	(let
+		(pattern
+			(identifier))
+		value: (extraction
+			(tuple (int_literal) (int_literal))
+			(application (identifier) (int_literal)))))
+
+

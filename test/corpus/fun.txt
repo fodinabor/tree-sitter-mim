@@ -11,4 +11,4 @@ fun with_filter x@tt = return 0;
 		name: (identifier)
 		(pattern (identifier))
 		(filter (bool_literal))
-		value: (application (identifier) (num_literal))))
+		value: (application (identifier) (int_literal))))

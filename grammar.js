@@ -41,7 +41,7 @@ module.exports = grammar({
   rules: {
     source_file: $ => seq(
       repeat($._dependency),
-      repeat($._declaration),
+      repeat(choice($._declaration, ";"))
     ),
 
     _dependency: $ => choice(
@@ -65,10 +65,9 @@ module.exports = grammar({
       choice($.pattern, $.annex),
       "=",
       field("value", $._expression),
-      ";",
     )),
 
-    lam: $ => prec(1, seq(
+    lam: $ => prec.left(1, seq(
       choice("lam", "con", "fun"),
       optional("extern"),
       field("name", $._name),
@@ -85,7 +84,6 @@ module.exports = grammar({
           field("value", $._expression),
         )
       ),
-      ";",
     )),
 
     filter: $ => seq("@", $._expression),
@@ -98,7 +96,7 @@ module.exports = grammar({
       optional(
         seq(
           ",",
-          field("arity", $.num_literal),
+          field("arity", $.int_literal),
         )
       ),
       optional(
@@ -123,7 +121,7 @@ module.exports = grammar({
       optional(
         seq(
           ",",
-          field("curry", $.num_literal),
+          field("curry", $.int_literal),
           optional(
             seq(
               ",",
@@ -132,7 +130,6 @@ module.exports = grammar({
           ),
         )
       ),
-      ";",
     ),
 
     pattern: $ => prec.right(choice(
@@ -178,6 +175,11 @@ module.exports = grammar({
         choice("]", "}"),
       ),
     )),
+
+    battern: $ => choice(
+      field("type", $._expression),
+      seq($.identifier, $._type_annotation),
+    ),
 
     group: $ => seq(
       $.identifier,
@@ -230,7 +232,8 @@ module.exports = grammar({
 
     _literal: $ => choice(
       $.bool_literal,
-      $.num_literal,
+      $.int_literal,
+      $.float_literal,
       $.string_literal,
       $.char_literal,
       $.other_literal,
@@ -238,7 +241,7 @@ module.exports = grammar({
 
     bool_literal: $ => choice("tt", "ff"),
 
-    num_literal: $ => choice(
+    int_literal: $ => choice(
        // binary literal
       /[\+\-]?0[bB][01]+/,
        // oct literal
@@ -247,6 +250,9 @@ module.exports = grammar({
       /[\+\-]?[0-9]+/,
        // hexadecimal literal
       /[\+\-]?0[xX][0-9a-fA-F]+/,
+    ),
+
+    float_literal: $ => choice(
       // decimal float literal x.
       /[\+\-]?[0-9]+\.[0-9]*([eE][\+\-][0-9]+)?/,
       // decimal float literal .x
@@ -278,19 +284,21 @@ module.exports = grammar({
       $.block,
       $.lambda,
       $.tuple,
+      $.where,
     ),
 
     block: $ => prec(-10, seq(
-      repeat1($._declaration),
+      $._declaration,
+      repeat(choice($._declaration, ";")),
       $._expression,
     )),
 
     application: $ => choice(
-      prec.left(-2, seq($._expression, $._expression)),
-      prec.left(-3, seq($._expression, "@", $._expression)),
+      prec.left(-1, seq($._expression, $._expression)),
+      prec.left(-2, seq($._expression, "@", $._expression)),
     ),
 
-    extraction: $ => prec.left(-1, seq($._expression, "#", $._expression)),
+    extraction: $ => prec.left(-3, seq($._expression, "#", $._expression)),
 
     annotated: $ => prec.left(-5, seq(
       field("value", $._expression),
@@ -300,7 +308,7 @@ module.exports = grammar({
     _type_annotation: $ => seq(":", field("type", $._expression)),
 
     lambda: $ => prec(1, seq(
-      choice("lam", "λ", "cn", "fn", "ret"),
+      choice("lm", "λ", "cn", "fn", "ret"),
       repeat(seq($.pattern, optional($.filter))),
       optional(
         seq(
@@ -314,11 +322,22 @@ module.exports = grammar({
 
     tuple: $ => seq(
       choice("(", "[", "{"),
-      $._expression,
-      repeat(seq(",", $._expression)),
-      optional(","),
+      optional(
+        seq(
+          $._expression,
+          repeat(seq(",", $._expression)),
+          optional(","),
+        )
+      ),
       choice(")", "]", "}"),
     ),
+
+    where: $ => prec(-6, seq(
+      $._expression,
+      "where",
+      repeat($._declaration),
+      "end",
+    )),
 
     _type: $ => choice(
       $.primitive_type,
@@ -329,7 +348,7 @@ module.exports = grammar({
 
     primitive_type: $ => choice(
       "Univ",
-      /Type [0-9]+/,
+      seq("Type", $.int_literal),
       "*",
       "□",
       "Nat",

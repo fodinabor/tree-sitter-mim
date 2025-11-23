@@ -57,7 +57,7 @@ axm %core.nat(add, sub, mul): «2; Nat» → Nat;
 		name: (annex (identifier) (identifier) (identifier))
 		type: (function_type
 			(array_type
-				size: (num_literal)
+				size: (int_literal)
 				type: (primitive_type))
 			(primitive_type))))
 
@@ -148,7 +148,7 @@ axm %core.bit2( f,      nor, nciff, nfst, niff, nsnd, xor_, nand,
 				(pattern (pattern (identifier) type: (primitive_type)))
 				(function_type
 					(array_type
-						size: (num_literal)
+						size: (int_literal)
 						type: (primitive_type (identifier)))
 					(primitive_type (identifier)))))
 		normalizer: (identifier)))
