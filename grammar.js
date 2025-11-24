@@ -209,7 +209,7 @@ module.exports = grammar({
 
     identifier: $ => $._symbol,
 
-    annex: $ => seq(
+    annex: $ => prec.left(seq(
       "%",
       $._symbol,
       ".",
@@ -218,10 +218,10 @@ module.exports = grammar({
         seq(".", $._symbol)
       ),
       optional($._subtags),
-    ),
+    )),
 
     _subtags: $ => seq(
-      /\(/,
+      "(",
       $.identifier,
       repeat(
         seq(
