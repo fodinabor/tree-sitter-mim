@@ -226,7 +226,7 @@ module.exports = grammar({
       repeat(
         seq(
           "=",
-          $.identifier,
+          field("alias", $.identifier),
         )
       ),
       repeat(
@@ -236,7 +236,7 @@ module.exports = grammar({
           repeat(
             seq(
               "=",
-              $.identifier,
+              field("alias", $.identifier),
             )
           )
         )

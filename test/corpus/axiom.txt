@@ -73,10 +73,10 @@ axm %test.foo(blub = b = blb, krams = k): Nat;
 	(axiom
 		name: (annex
 			(identifier)
+			alias: (identifier)
+			alias: (identifier)
 			(identifier)
-			(identifier)
-			(identifier)
-			(identifier))
+			alias: (identifier))
 		type: (primitive_type)))
 
 =====
