@@ -56,10 +56,6 @@
         "named": true
       },
       {
-        "type": "block",
-        "named": true
-      },
-      {
         "type": "bool_literal",
         "named": true
       },
@@ -97,10 +93,6 @@
       },
       {
         "type": "tuple",
-        "named": true
-      },
-      {
-        "type": "where",
         "named": true
       }
     ]
@@ -194,6 +186,10 @@
           {
             "type": "_expression",
             "named": true
+          },
+          {
+            "type": "where",
+            "named": true
           }
         ]
       },
@@ -203,6 +199,10 @@
         "types": [
           {
             "type": "_expression",
+            "named": true
+          },
+          {
+            "type": "where",
             "named": true
           }
         ]
@@ -260,28 +260,13 @@
           {
             "type": "_expression",
             "named": true
+          },
+          {
+            "type": "where",
+            "named": true
           }
         ]
       }
-    }
-  },
-  {
-    "type": "block",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "_declaration",
-          "named": true
-        },
-        {
-          "type": "_expression",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -348,6 +333,10 @@
         },
         {
           "type": "pattern",
+          "named": true
+        },
+        {
+          "type": "where",
           "named": true
         }
       ]
@@ -429,6 +418,10 @@
           {
             "type": "_expression",
             "named": true
+          },
+          {
+            "type": "where",
+            "named": true
           }
         ]
       },
@@ -438,6 +431,10 @@
         "types": [
           {
             "type": "_expression",
+            "named": true
+          },
+          {
+            "type": "where",
             "named": true
           }
         ]
@@ -469,6 +466,10 @@
           {
             "type": "_expression",
             "named": true
+          },
+          {
+            "type": "where",
+            "named": true
           }
         ]
       },
@@ -478,6 +479,10 @@
         "types": [
           {
             "type": "_expression",
+            "named": true
+          },
+          {
+            "type": "where",
             "named": true
           }
         ]
@@ -508,6 +513,10 @@
         "types": [
           {
             "type": "_expression",
+            "named": true
+          },
+          {
+            "type": "where",
             "named": true
           }
         ]
@@ -544,6 +553,10 @@
         {
           "type": "_expression",
           "named": true
+        },
+        {
+          "type": "where",
+          "named": true
         }
       ]
     }
@@ -558,6 +571,10 @@
         "types": [
           {
             "type": "_expression",
+            "named": true
+          },
+          {
+            "type": "where",
             "named": true
           }
         ]
@@ -688,6 +705,10 @@
       "types": [
         {
           "type": "_expression",
+          "named": true
+        },
+        {
+          "type": "where",
           "named": true
         }
       ]

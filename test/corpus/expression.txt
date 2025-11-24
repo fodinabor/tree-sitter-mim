@@ -67,4 +67,182 @@ let x = (0, 0)#foo 2;
 				(tuple (int_literal) (int_literal)) (identifier))
 				(int_literal))))
 
+=====
+where
+=====
+let x = a b
+	where
+		con a() = c d
+	end;
+
+---
+
+(source_file
+	(let
+		(pattern
+			(identifier))
+		value: (where
+			(application
+				(identifier)
+				(identifier))
+			(lam
+				name: (identifier)
+				(pattern)
+				value: (application
+					(identifier)
+					(identifier))))))
+
+=====
+nested where
+=====
+
+con seq () =
+    0
+    where
+        con head () =
+            let cond =  %core.ncmp.l (i, n);
+			()
+            where
+                con t() = t
+            end;
+    end;
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(pattern)
+		value: (where
+			(int_literal)
+			(lam
+				name: (identifier)
+				(pattern)
+				value: (where
+					(let
+						(pattern (identifier))
+						value: (application
+							(annex)
+							(tuple (identifier) (identifier))))
+					(tuple)
+					(lam
+						name: (identifier)
+						(pattern)
+						value: (identifier)))))))
+
+=====
+fib_seq nested where
+=====
+
+con seq {A: Nat} =
+    head(0, acc)
+    where
+        con head (i: Nat, acc: A) =
+            let cond = %core.ncmp.l;
+            (f, t)#cond ()
+            where
+                con t() = t
+                con f() = exit acc;
+            end;
+    end;
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(pattern
+			(pattern (identifier) type: (primitive_type)))
+		value: (where
+			(application
+				(identifier)
+				(tuple (int_literal) (identifier)))
+			(lam
+				name: (identifier)
+				(pattern
+					(pattern (identifier) type: (primitive_type))
+					(pattern (identifier) type: (identifier)))
+				value: (where
+					(let
+						(pattern (identifier))
+						value: (annex))
+					(application
+						(extraction
+							(tuple (identifier) (identifier))
+							(identifier))
+						(tuple))
+					(lam
+						name: (identifier)
+						(pattern)
+						value: (identifier))
+					(lam
+						name: (identifier)
+						(pattern)
+						value: (application
+							(identifier)
+							(identifier))))))))
+
+=====
+nested where 2
+=====
+
+con seq {A: Nat} =
+	_
+	where
+		con t() = t
+		where
+			con blub() = _;
+		end
+		con f() = exit acc;
+	end;
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(pattern
+			(pattern (identifier) type: (primitive_type)))
+		value: (where
+			(identifier)
+			(lam
+				name: (identifier)
+				(pattern)
+				value: (where
+					(identifier)
+					(lam
+						name: (identifier)
+						(pattern)
+						value: (identifier))))
+			(lam
+				name: (identifier)
+				(pattern)
+				value: (application
+					(identifier)
+					(identifier))))))
+
+=====
+no semicolon
+=====
+
+con t = t
+where
+    con blub() = _;
+end
+con f = exit;
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		value: (where
+			(identifier)
+			(lam
+				name: (identifier)
+				(pattern)
+				value: (identifier))))
+	(lam
+		name: (identifier)
+		value: (identifier)))
 

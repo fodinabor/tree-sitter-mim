@@ -8,14 +8,13 @@
 // @ts-check
 
 const PREC = {
-  block: -1,
+  def: -2,
+  lam: -1,
   fun: 1,
   ann: 2,
   eapp: 3,
   app: 4,
   ext: 5,
-  def: 10,
-  lam: 11,
 };
 
 const PUNCTUATION = [
@@ -47,6 +46,7 @@ module.exports = grammar({
     [$.pattern, $.tuple],
     [$.pattern, $._expression],
     [$.group, $._expression],
+    [$.where, $.array_type],
   ],
 
   rules: {
@@ -75,7 +75,7 @@ module.exports = grammar({
       "let",
       choice($.pattern, $.annex),
       "=",
-      field("value", $._expression),
+      field("value", $._primary_expression),
     )),
 
     lam: $ => prec.left(PREC.def, seq(
@@ -86,13 +86,13 @@ module.exports = grammar({
       optional(
         seq(
           ":",
-          field("type", $._expression),
+          field("type", $._primary_expression),
         )
       ),
       optional(
         seq(
           "=",
-          field("value", $._expression),
+          field("value", $._primary_expression),
         )
       ),
     )),
@@ -122,7 +122,7 @@ module.exports = grammar({
       "axm",
       field("name", $.annex),
       ":",
-      field("type", $._expression),
+      field("type", $._primary_expression),
       optional(
         seq(
           ",",
@@ -151,19 +151,23 @@ module.exports = grammar({
       ),
       seq(
         "(",
-          choice(
-            $.pattern,
-            $.group,
-          ),
-          repeat(
-            seq(
-              ",",
-              choice(
-                $.pattern,
-                $.group,
+        optional(
+          seq(
+            choice(
+              $.pattern,
+              $.group,
+            ),
+            repeat(
+              seq(
+                ",",
+                choice(
+                  $.pattern,
+                  $.group,
+                )
               )
-            )
+            ),
           ),
+        ),
         ")",
       ),
       seq(
@@ -171,7 +175,7 @@ module.exports = grammar({
           choice(
             $.pattern,
             $.group,
-            field("type", $._expression),
+            field("type", $._primary_expression),
           ),
           repeat(
             seq(
@@ -179,7 +183,7 @@ module.exports = grammar({
               choice(
                 $.pattern,
                 $.group,
-                field("type", $._expression),
+                field("type", $._primary_expression),
               ),
             )
           ),
@@ -188,7 +192,7 @@ module.exports = grammar({
     )),
 
     battern: $ => choice(
-      field("type", $._expression),
+      field("type", $._primary_expression),
       seq($.identifier, $._type_annotation),
     ),
 
@@ -284,6 +288,27 @@ module.exports = grammar({
 
     other_literal: $ => choice("⊥", ".bot", "⊤", ".top"),
 
+    _primary_expression: $ => prec.left(choice(
+      $._expression,
+      $.where,
+    )),
+
+    where: $ => prec.left(choice(
+      seq(
+        repeat1(choice($._declaration, ";")),
+        $._expression,
+      ),
+      seq(
+        repeat(choice($._declaration, ";")),
+        $._expression,
+        seq(
+          "where",
+          repeat(choice($._declaration, ";")),
+          "end",
+        )
+      )
+    )),
+
     _expression: $ => choice(
       $.annotated,
       $._type,
@@ -292,17 +317,9 @@ module.exports = grammar({
       $.annex,
       $.application,
       $.extraction,
-      $.block,
       $.lambda,
       $.tuple,
-      $.where,
     ),
-
-    block: $ => prec(PREC.block, seq(
-      $._declaration,
-      repeat(choice($._declaration, ";")),
-      $._expression,
-    )),
 
     application: $ => choice(
       prec.left(PREC.app, seq($._expression, $._expression)),
@@ -324,31 +341,24 @@ module.exports = grammar({
       optional(
         seq(
           ":",
-          field("type", $._expression),
+          field("type", $._primary_expression),
         )
       ),
       "=",
-      field("value", $._expression),
+      field("value", $._primary_expression),
     )),
 
     tuple: $ => seq(
       choice("(", "[", "{"),
       optional(
         seq(
-          $._expression,
-          repeat(seq(",", $._expression)),
+          $._primary_expression,
+          repeat(seq(",", $._primary_expression)),
           optional(","),
         )
       ),
       choice(")", "]", "}"),
     ),
-
-    where: $ => prec(PREC.def, seq(
-      $._expression,
-      "where",
-      repeat($._declaration),
-      "end",
-    )),
 
     _type: $ => choice(
       $.primitive_type,
@@ -367,37 +377,37 @@ module.exports = grammar({
       "Bool",
     ),
 
-    function_type: $ => prec.right(-4,
+    function_type: $ => prec.right(PREC.fun,
       choice(
-        seq($._expression, choice("->", "→"), $._expression),
-        seq($.pattern, choice("->", "→"), $._expression),
-        seq("Cn", choice($._expression, $.pattern)),
-        prec(5, seq(
+        seq($._expression, choice("->", "→"), $._primary_expression),
+        seq($.pattern, choice("->", "→"), $._primary_expression),
+        seq("Cn", choice($._primary_expression, $.pattern)),
+        seq(
           "Fn",
           $.pattern,
           choice("->", "→"),
-          $._expression
-        )),
+          $._primary_expression
+        ),
       )
     ),
 
     array_type: $ => seq(
       choice("«", "⟪", "<<"),
-      field("size", $._expression),
+      field("size", $._primary_expression),
       repeat(seq(
-        ",", field("size", $._expression)
+        ",", field("size", $._primary_expression)
       )),
       optional(","),
       ";",
-      field("type", $._expression),
+      field("type", $._primary_expression),
       choice("»", "⟫", ">>"),
     ),
 
     pack: $ => seq(
       choice("‹", "⟨", "<"),
-      $._expression,
+      $._primary_expression,
       ";",
-      $._expression,
+      $._primary_expression,
       choice("›", "⟩", ">"),
     ),
 

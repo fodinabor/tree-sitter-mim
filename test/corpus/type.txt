@@ -130,7 +130,7 @@ let x: [R: Ring] -> let a = 3; <<a; Nat>> = 0;
 		(pattern (identifier)
 			type: (function_type
 				(pattern (pattern (identifier) type: (identifier)))
-				(block
+				(where
 					(let (pattern (identifier)) value: (int_literal))
 					(array_type
 						size: (identifier)
