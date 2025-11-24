@@ -326,11 +326,6 @@
     }
   },
   {
-    "type": "float_literal",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "function_type",
     "named": true,
     "fields": {},
@@ -895,6 +890,10 @@
   {
     "type": "ff",
     "named": false
+  },
+  {
+    "type": "float_literal",
+    "named": true
   },
   {
     "type": "fn",

@@ -267,7 +267,7 @@ module.exports = grammar({
       /[\+\-]?0[xX][0-9a-fA-F]+/,
     ),
 
-    float_literal: $ => choice(
+    float_literal: $ => token(prec(-1, choice(
       // decimal float literal x.
       /[\+\-]?[0-9]+\.[0-9]*([eE][\+\-][0-9]+)?/,
       // decimal float literal .x
@@ -280,7 +280,7 @@ module.exports = grammar({
       /[\+\-]?[0-9a-fA-F]*\.[0-9a-fA-F]+([pP][\+\-][0-9]+)?/,
       // hexadecimal float literal p
       /[\+\-]?[0-9a-fA-F]+[pP][\+\-][0-9]+/,
-    ),
+    ))),
 
     string_literal: $ => /\"(\\\"|[^\"])*\"/,
 

@@ -246,3 +246,15 @@ con f = exit;
 		name: (identifier)
 		value: (identifier)))
 
+=====
+annex float lit
+=====
+
+con continue = %core.nat.add;
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		value: (annex)))
