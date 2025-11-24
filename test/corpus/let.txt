@@ -16,7 +16,7 @@ let y = 1;
 (source_file
 	(line_comment)
 	(let (pattern (identifier)) value: (int_literal))
-	(doc_comment)
+	(doc_comment (doc))
 	(block_comment)
 	(let (pattern (identifier)) value: (int_literal)))
 

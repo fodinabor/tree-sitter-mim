@@ -293,7 +293,17 @@
   {
     "type": "doc_comment",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "doc",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "extraction",
@@ -740,6 +750,10 @@
     }
   },
   {
+    "type": "\n",
+    "named": false
+  },
+  {
     "type": "#",
     "named": false
   },
@@ -878,6 +892,10 @@
   {
     "type": "con",
     "named": false
+  },
+  {
+    "type": "doc",
+    "named": true
   },
   {
     "type": "end",
