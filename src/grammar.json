@@ -1756,26 +1756,14 @@
           "value": "///"
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "doc"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "\n"
+          "type": "SYMBOL",
+          "name": "doc"
         }
       ]
     },
     "doc": {
       "type": "PATTERN",
-      "value": ".+"
+      "value": ".*\\n"
     },
     "block_comment": {
       "type": "SEQ",

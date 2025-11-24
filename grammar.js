@@ -413,9 +413,9 @@ module.exports = grammar({
 
     line_comment: $ => /\/\/([^/].*)?/,
 
-    doc_comment: $ => seq("///", optional($.doc), "\n"),
+    doc_comment: $ => seq("///", $.doc),
 
-    doc: $ => /.+/,
+    doc: $ => /.*\n/,
 
     block_comment: $ => seq("/*", /[\/\*]?|(\*[^\/]|[^\*]\/|[^\/\*])*\*+/, "/"),
   }
