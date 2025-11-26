@@ -712,8 +712,17 @@
       ]
     },
     "identifier": {
-      "type": "SYMBOL",
-      "name": "_symbol"
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "return"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_symbol"
+        }
+      ]
     },
     "annex": {
       "type": "PREC_LEFT",

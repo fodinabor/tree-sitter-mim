@@ -947,6 +947,10 @@
     "named": false
   },
   {
+    "type": "return",
+    "named": false
+  },
+  {
     "type": "string_literal",
     "named": true
   },

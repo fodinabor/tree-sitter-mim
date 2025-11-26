@@ -212,7 +212,7 @@ module.exports = grammar({
 
     _name: $ => choice($.identifier, $.annex),
 
-    identifier: $ => $._symbol,
+    identifier: $ => choice("return", $._symbol),
 
     annex: $ => prec.left(seq(
       "%",
