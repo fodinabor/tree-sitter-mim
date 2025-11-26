@@ -299,7 +299,7 @@
       "required": true,
       "types": [
         {
-          "type": "doc",
+          "type": "doc_content",
           "named": true
         }
       ]
@@ -890,7 +890,7 @@
     "named": false
   },
   {
-    "type": "doc",
+    "type": "doc_content",
     "named": true
   },
   {

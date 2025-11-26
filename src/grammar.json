@@ -1757,13 +1757,9 @@
         },
         {
           "type": "SYMBOL",
-          "name": "doc"
+          "name": "doc_content"
         }
       ]
-    },
-    "doc": {
-      "type": "PATTERN",
-      "value": ".*\\n"
     },
     "block_comment": {
       "type": "SEQ",
@@ -1781,6 +1777,10 @@
           "value": "/"
         }
       ]
+    },
+    "error_sentinel": {
+      "type": "STRING",
+      "value": "unused token"
     }
   },
   "extras": [
@@ -1820,7 +1820,16 @@
     ]
   ],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "doc_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "error_sentinel"
+    }
+  ],
   "inline": [],
   "supertypes": [
     "_dependency",

@@ -28,7 +28,12 @@ module.exports = grammar({
 
   word: $ => $._symbol,
 
-  extras: ($) => [
+  externals: $ => [
+    $.doc_content,
+    $.error_sentinel,
+  ],
+
+  extras: $ => [
     /\s/,
     $.line_comment,
     $.doc_comment,
@@ -413,10 +418,10 @@ module.exports = grammar({
 
     line_comment: $ => /\/\/([^/].*)?/,
 
-    doc_comment: $ => seq("///", $.doc),
-
-    doc: $ => /.*\n/,
+    doc_comment: $ => seq("///", $.doc_content),
 
     block_comment: $ => seq("/*", /[\/\*]?|(\*[^\/]|[^\*]\/|[^\/\*])*\*+/, "/"),
+
+    error_sentinel: $ => "unused token",
   }
 });
