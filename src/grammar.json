@@ -1765,6 +1765,10 @@
           "value": "///"
         },
         {
+          "type": "PATTERN",
+          "value": "[ \\t]*"
+        },
+        {
           "type": "SYMBOL",
           "name": "doc_content"
         }
