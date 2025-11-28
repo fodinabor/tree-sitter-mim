@@ -1,2 +1,9 @@
 tree-sitter-mim.wasm
 test/plugins
+node_modules/
+build/
+*.o
+*.a
+*.so
+*.wasm
+*.pc
