@@ -8,7 +8,9 @@ axm %core.whatever: Nat → Nat;
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
 		type: (function_type
 			(primitive_type)
 			(primitive_type))))
@@ -23,7 +25,9 @@ axm %core.whatever: Nat → Nat; // test
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
 		type: (function_type
 			(primitive_type)
 			(primitive_type)))
@@ -33,13 +37,15 @@ axm %core.whatever: Nat → Nat; // test
 simple axiom with trailing space
 ===
 
-axm %core.whatever: Nat → Nat; 
+axm %core.whatever: Nat → Nat;
 
 ---
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
 		type: (function_type
 			(primitive_type)
 			(primitive_type))))
@@ -54,7 +60,12 @@ axm %core.nat(add, sub, mul): «2; Nat» → Nat;
 
 (source_file
 	(axiom
-		name: (annex (identifier) (identifier) (identifier))
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier))
 		type: (function_type
 			(array_type
 				size: (int_literal)
@@ -72,11 +83,13 @@ axm %test.foo(blub = b = blb, krams = k): Nat;
 (source_file
 	(axiom
 		name: (annex
-			(identifier)
-			alias: (identifier)
-			alias: (identifier)
-			(identifier)
-			alias: (identifier))
+			module: (value_identifier)
+			name: (value_identifier)
+			(value_identifier)
+			subtag: (value_identifier)
+			subtag: (value_identifier)
+			(value_identifier)
+			subtag: (value_identifier))
 		type: (primitive_type)))
 
 =====
@@ -89,9 +102,12 @@ axm %test.norm.alize: Nat, normalize;
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier)
+			subtag: (value_identifier))
 		type: (primitive_type)
-		normalizer: (identifier)))
+		normalizer: (value_identifier)))
 
 =====
 idx axiom
@@ -103,15 +119,17 @@ axm %core.idx: [s: Nat] → [m: Nat] → [l: Nat] → Idx s, normalize_idx;
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
 		type: (function_type
-			(pattern (pattern (identifier) type: (primitive_type)))
+			(pattern (pattern (value_identifier) type: (primitive_type)))
 			(function_type
-				(pattern (pattern (identifier) type: (primitive_type)))
+				(pattern (pattern (value_identifier) type: (primitive_type)))
 				(function_type
-					(pattern (pattern (identifier) type: (primitive_type)))
-					(primitive_type (identifier)))))
-		normalizer: (identifier)))
+					(pattern (pattern (value_identifier) type: (primitive_type)))
+					(primitive_type (value_identifier)))))
+		normalizer: (value_identifier)))
 
 =====
 bit2 axiom
@@ -126,32 +144,34 @@ axm %core.bit2( f,      nor, nciff, nfst, niff, nsnd, xor_, nand,
 (source_file
 	(axiom
 		name: (annex
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier)
-			(identifier))
+			module: (value_identifier)
+			name: (value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier)
+			(value_identifier))
 		type: (function_type
-			(pattern (pattern (identifier) type: (primitive_type)))
+			(pattern (pattern (value_identifier) type: (primitive_type)))
 			(function_type
-				(pattern (pattern (identifier) type: (primitive_type)))
+				(pattern (pattern (value_identifier) type: (primitive_type)))
 				(function_type
 					(array_type
 						size: (int_literal)
-						type: (primitive_type (identifier)))
-					(primitive_type (identifier)))))
-		normalizer: (identifier)))
+						type: (primitive_type (value_identifier)))
+					(primitive_type (value_identifier)))))
+		normalizer: (value_identifier)))
 
 =====
 mat axiom
@@ -163,13 +183,15 @@ axm %matrix.Mat: [n: Nat, S: «n; Nat», T: *] → *;
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (type_identifier))
 		type: (function_type
 			(pattern
-				(pattern (identifier) type: (primitive_type))
-				(pattern (identifier)
-					type: (array_type size: (identifier) type: (primitive_type)))
-				(pattern (identifier) type: (primitive_type)))
+				(pattern (value_identifier) type: (primitive_type))
+				(pattern (type_identifier)
+					type: (array_type size: (value_identifier) type: (primitive_type)))
+				(pattern (type_identifier) type: (primitive_type)))
 			(primitive_type))))
 
 =====
@@ -182,9 +204,12 @@ axm %test.blub.ding: <<a: b; Nat>>;
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier)
+			subtag: (value_identifier))
 		type: (array_type
-			size: (annotated value: (identifier) type: (identifier))
+			size: (annotated value: (value_identifier) type: (value_identifier))
 			type: (primitive_type))))
 
 =====
@@ -211,54 +236,68 @@ axm %matrix.map_reduce:
 
 (source_file
 	(axiom
-		name: (annex)
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
 		type: (function_type
 			(pattern
-				(pattern (identifier) type: (primitive_type))
-				(pattern (identifier) type: (array_type size: (identifier) type: (primitive_type)))
-				(pattern (identifier) type: (primitive_type))
-				(pattern (identifier) type: (primitive_type))
-				(pattern (identifier)
-					type: (array_type size: (identifier) type: (primitive_type)))
-				(pattern (identifier)
-					type: (array_type size: (identifier) type: (primitive_type)))
-				(pattern (identifier)
+				(pattern (value_identifier) type: (primitive_type))
+				(pattern (type_identifier) type: (array_type size: (value_identifier) type: (primitive_type)))
+				(pattern (type_identifier) type: (primitive_type))
+				(pattern (value_identifier) type: (primitive_type))
+				(pattern (type_identifier)
+					type: (array_type size: (value_identifier) type: (primitive_type)))
+				(pattern (type_identifier)
+					type: (array_type size: (value_identifier) type: (primitive_type)))
+				(pattern (type_identifier)
 					type: (array_type
-						size: (annotated value: (identifier) type: (identifier))
+						size: (annotated value: (value_identifier) type: (value_identifier))
 						type: (array_type
-							size: (extraction (identifier) (identifier))
+							size: (extraction (type_identifier) (value_identifier))
 							type: (primitive_type)))))
 			(function_type
 				(pattern
-					(pattern (identifier) type: (annex))
-					(pattern (identifier) type: (identifier))
-					(pattern (identifier)
+					(pattern (value_identifier) type: (annex
+						module: (value_identifier)
+						name: (type_identifier)))
+					(pattern (value_identifier) type: (type_identifier))
+					(pattern (value_identifier)
 						type: (function_type
-							(pattern type: (annex) type: (identifier)
+							(pattern type: (annex
+								module: (value_identifier)
+								name: (type_identifier)) type: (type_identifier)
 								type: (array_type
-									size: (annotated value: (identifier) type: (identifier))
-									type: (extraction (identifier) (identifier))))
-							(tuple (annex) (identifier))))
-					(pattern (identifier)
+									size: (annotated value: (value_identifier) type: (value_identifier))
+									type: (extraction (type_identifier) (value_identifier))))
+							(tuple (annex
+								module: (value_identifier)
+								name: (type_identifier)) (type_identifier))))
+					(pattern (value_identifier)
 						type: (array_type
-							size: (annotated value: (identifier) type: (identifier))
+							size: (annotated value: (value_identifier) type: (value_identifier))
 							type: (tuple
 								(array_type
-									size: (extraction (identifier) (identifier))
+									size: (extraction (type_identifier) (value_identifier))
 									type: (primitive_type))
 								(application
-									(annex)
+									(annex
+										module: (value_identifier)
+										name: (type_identifier))
 									(tuple
-										(extraction (identifier) (identifier))
-										(extraction (identifier) (identifier))
-										(extraction (identifier) (identifier))))))))
+										(extraction (type_identifier) (value_identifier))
+										(extraction (type_identifier) (value_identifier))
+										(extraction (type_identifier) (value_identifier))))))))
 					(tuple
-						(annex)
+						(annex
+							module: (value_identifier)
+							name: (type_identifier))
 						(application
-							(annex)
+							(annex
+								module: (value_identifier)
+								name: (type_identifier))
 							(tuple
-								(identifier)
-								(identifier)
-								(identifier))))))
-		normalizer: (identifier)))
+								(value_identifier)
+								(type_identifier)
+								(type_identifier))))))
+		normalizer: (value_identifier)))
 

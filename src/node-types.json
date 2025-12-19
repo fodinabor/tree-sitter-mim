@@ -120,10 +120,48 @@
     ]
   },
   {
+    "type": "identifier",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "return",
+        "named": false
+      },
+      {
+        "type": "type_identifier",
+        "named": true
+      },
+      {
+        "type": "value_identifier",
+        "named": true
+      }
+    ]
+  },
+  {
     "type": "annex",
     "named": true,
     "fields": {
-      "alias": {
+      "module": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "subtag": {
         "multiple": true,
         "required": false,
         "types": [
@@ -383,11 +421,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "identifier",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "import",
@@ -959,6 +992,14 @@
     "named": false
   },
   {
+    "type": "type_identifier",
+    "named": true
+  },
+  {
+    "type": "value_identifier",
+    "named": true
+  },
+  {
     "type": "where",
     "named": false
   },
@@ -1004,6 +1045,10 @@
   },
   {
     "type": "□",
+    "named": false
+  },
+  {
+    "type": "★",
     "named": false
   },
   {

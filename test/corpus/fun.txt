@@ -8,7 +8,7 @@ fun with_filter x@tt = return 0;
 
 (source_file
 	(lam
-		name: (identifier)
-		(pattern (identifier))
+		name: (value_identifier)
+		(pattern (value_identifier))
 		(filter (bool_literal))
-		value: (application (identifier) (int_literal))))
+		value: (application (int_literal))))

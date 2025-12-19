@@ -26,7 +26,7 @@ const PUNCTUATION = [
 module.exports = grammar({
   name: "mim",
 
-  word: $ => $._symbol,
+  word: $ => $.value_identifier,
 
   externals: $ => [
     $.doc_content,
@@ -45,6 +45,7 @@ module.exports = grammar({
     $._declaration,
     $._expression,
     $._type,
+    $.identifier,
   ],
 
   conflicts: $ => [
@@ -208,21 +209,25 @@ module.exports = grammar({
       $._type_annotation,
     ),
 
-    _symbol: $ => /[_a-zA-Z][_a-zA-Z0-9]*/,
-
     _name: $ => choice($.identifier, $.annex),
 
-    identifier: $ => choice("return", $._symbol),
+    identifier: $ => choice("return", $.value_identifier, $.type_identifier),
+
+    value_identifier: $ => /[_a-z][_a-zA-Z0-9]*/,
+
+    type_identifier: $ => /[A-Z][_a-zA-Z0-9]*/,
 
     annex: $ => prec.left(seq(
       "%",
-      $._symbol,
+      field("module", $.identifier),
       ".",
-      $._symbol,
+      field("name", $.identifier),
       optional(
-        seq(".", $._symbol)
-      ),
-      optional($._subtags),
+        choice(
+          seq(".", field("subtag", $.identifier)),
+          $._subtags,
+        )
+      )
     )),
 
     _subtags: $ => seq(
@@ -231,7 +236,7 @@ module.exports = grammar({
       repeat(
         seq(
           "=",
-          field("alias", $.identifier),
+          field("subtag", $.identifier),
         )
       ),
       repeat(
@@ -241,7 +246,7 @@ module.exports = grammar({
           repeat(
             seq(
               "=",
-              field("alias", $.identifier),
+              field("subtag", $.identifier),
             )
           )
         )
