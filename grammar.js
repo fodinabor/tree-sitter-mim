@@ -232,7 +232,7 @@ module.exports = grammar({
 
     _subtags: $ => seq(
       "(",
-      $.identifier,
+      field("subtag", $.identifier),
       repeat(
         seq(
           "=",
@@ -242,7 +242,7 @@ module.exports = grammar({
       repeat(
         seq(
           ",",
-          $.identifier,
+          field("subtag", $.identifier),
           repeat(
             seq(
               "=",
