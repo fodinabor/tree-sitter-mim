@@ -376,6 +376,7 @@ module.exports = grammar({
       "Univ",
       seq("Type", $.int_literal),
       "*",
+      "★",
       "□",
       "Nat",
       prec.left(PREC.app, seq("Idx", $._expression)),
