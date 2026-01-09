@@ -97,70 +97,6 @@ module.exports = grammar({
 
     plugin: $ => seq("plugin", $.identifier, ";"),
 
-    _declarations: $ => prec.left(repeat1(seq(
-      $.declaration,
-      optional(";"),
-    ))),
-
-    declaration: $ => choice(
-      $.let,
-      $.lam,
-      $.axiom,
-    ),
-
-    let: $ => seq(
-      "let",
-      choice($.binder, $.annex),
-      "=",
-      field("value", $.expression),
-    ),
-
-    lam: $ => prec.left(seq(
-      choice("lam", "con", "fun"),
-      optional("extern"),
-      field("name", $._name),
-      repeat(seq(prec(PREC.pi, $.lam_domain), optional($.filter))),
-      optional(
-        seq(
-          ":",
-          field("type", $.expression),
-        )
-      ),
-      optional(
-        seq(
-          "=",
-          field("value", $.expression),
-        )
-      ),
-    )),
-
-    filter: $ => seq("@", $.expression),
-
-    axiom: $ => seq(
-      "axm",
-      field("name", $.annex),
-      ":",
-      field("type", $.expression),
-      optional(
-        seq(
-          ",",
-          field("normalizer", $.identifier),
-        )
-      ),
-      optional(
-        seq(
-          ",",
-          field("curry", $.int_literal),
-          optional(
-            seq(
-              ",",
-              field("trip", $.identifier),
-            )
-          ),
-        )
-      ),
-    ),
-
     lam_domain: $ => choice(
       $.pattern,
       $.battern,
@@ -242,6 +178,109 @@ module.exports = grammar({
       ")",
     ),
 
+    _declarations: $ => prec.left(repeat1(seq(
+      $.declaration,
+      optional(";"),
+    ))),
+
+    declaration: $ => choice(
+      $.let,
+      $.lam,
+      $.axiom,
+    ),
+
+    let: $ => seq(
+      "let",
+      choice($.binder, $.annex),
+      "=",
+      field("value", $.expression),
+    ),
+
+    lam: $ => prec.left(seq(
+      choice("lam", "con", "fun"),
+      optional("extern"),
+      field("name", $._name),
+      repeat(seq(prec(PREC.pi, $.lam_domain), optional($.filter))),
+      optional(
+        seq(
+          ":",
+          field("type", $.expression),
+        )
+      ),
+      optional(
+        seq(
+          "=",
+          field("value", $.expression),
+        )
+      ),
+    )),
+
+    filter: $ => seq("@", $.expression),
+
+    axiom: $ => seq(
+      "axm",
+      field("name", $.annex),
+      ":",
+      field("type", $.expression),
+      optional(
+        seq(
+          ",",
+          field("normalizer", $.identifier),
+        )
+      ),
+      optional(
+        seq(
+          ",",
+          field("curry", $.int_literal),
+          optional(
+            seq(
+              ",",
+              field("trip", $.identifier),
+            )
+          ),
+        )
+      ),
+    ),
+
+    expression: $ => choice(
+      $.primary_expression,
+      $.infix_expression,
+    ),
+
+    primary_expression: $ => prec.left(choice(
+      $.primitive,
+      $.identifier,
+      $.annex,
+      $._literal,
+      $.decl_expr,
+      $.pi,
+      $.lambda,
+      $.insert,
+      $.ret,
+      $.uniq,
+      $.array,
+      $.pack,
+      $.tuple,
+      $.match,
+    )),
+
+    primitive: $ => choice(
+      "Univ",
+      "Type",
+      "Nat",
+      "Idx",
+      "Bool",
+      "I1",
+      "I8",
+      "I16",
+      "I32",
+      "I64",
+      "*", "★",
+      "□",
+      ".bot", "⊥",
+      ".top", "⊤",
+    ),
+
     _literal: $ => choice(
       $.annotated,
       $.bool_literal,
@@ -249,7 +288,6 @@ module.exports = grammar({
       $.float_literal,
       $.string_literal,
       $.char_literal,
-      $.other_literal,
     ),
 
     annotated: $ => prec.left(PREC.ann, seq(
@@ -288,44 +326,6 @@ module.exports = grammar({
     string_literal: $ => /\"(\\\"|[^\"])*\"/,
 
     char_literal: $ => /\'(\\.|[^\'])\'/,
-
-    other_literal: $ => choice("⊥", ".bot", "⊤", ".top"),
-
-    expression: $ => choice(
-      $.primary_expression,
-      $.infix_expression,
-    ),
-
-    primary_expression: $ => prec.left(choice(
-      $.primitive,
-      $.identifier,
-      $.annex,
-      $._literal,
-      $.decl_expr,
-      $.pi,
-      $.lambda,
-      $.insert,
-      $.ret,
-      $.uniq,
-      $.array,
-      $.pack,
-      $.tuple,
-      $.match,
-    )),
-
-    primitive: $ => choice(
-      "Univ",
-      "Nat",
-      "Idx",
-      "Bool",
-      "I1",
-      "I8",
-      "I16",
-      "I32",
-      "I64",
-      "*", "★",
-      "□"
-    ),
 
     decl_expr: $ => seq(
       $._declarations,
@@ -449,7 +449,7 @@ module.exports = grammar({
     extraction: $ => prec.left(PREC.ext, seq($.expression, "#", $.expression)),
 
     arrow: $ => prec.right(PREC.arrow,
-      seq($.expression, choice("->", "→"), $.expression),
+      seq($.expression, $._arrow, $.expression),
     ),
 
     union: $ => prec.left(PREC.union, seq(
