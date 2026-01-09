@@ -8,12 +8,11 @@
 // @ts-check
 
 const PREC = {
-  def: -2,
-  bot: -1,
+  bot: -2,
+  ann: -1,
   where: 1,
   arrow: 2,
   pi: 3,
-  ann: 4,
   inj: 5,
   app: 6,
   union: 7,
@@ -26,58 +25,27 @@ const PUNCTUATION = [
   "=", ",", ";", ".", "#", ":", "%", "@",
 ]
 
-// build pattern rule
-//
-// - paren: whether paren style patterns are allowed
-// - implicit: whether implicit (brace) pattern are allowed
-// - prec: current precedence
-function mk_pattern($, paren, implicit, cur_prec=PREC.bot) {
-  const options = [
-    mk_tuple_pattern($, paren, implicit),
-    ...(paren ? [$.identifier] : []),
-    seq($.expression, $._type_annotation),
-    // prec(cur_prec, $.expression),
-  ];
-
-  // return directly if only one option, otherwise use choice
-  return options.length === 1 ? options[0] : choice(...options);
-}
-
-function mk_tuple_pattern($, paren, implicit) {
-  const open = [
-    "[",
-    ...(paren    ? ["("] : []),
-    ...(implicit ? ["{"] : []),
-  ];
-  const close = [
-    "]",
-    ...(paren    ? [")"] : []),
-    ...(implicit ? ["}"] : []),
-  ];
-
-  // Build pattern choice based on parameters
-  const patternChoice = paren ? $._ptrn_paren : $._ptrn_brack;
-
+function tuple_pattern($, open, close, pattern) {
   return seq(
-    open.length === 1 ? open[0] : choice(...open),
+    open,
     optional(
       seq(
         choice(
-          patternChoice,
+          pattern,
           $.group,
         ),
         repeat(
           seq(
             ",",
             choice(
-              patternChoice,
+              pattern,
               $.group,
             )
           )
         ),
       ),
     ),
-    close.length === 1 ? close[0] : choice(...close),
+    close,
   )
 }
 
@@ -107,8 +75,9 @@ module.exports = grammar({
   ],
 
   conflicts: $ => [
-    [$.primary_expression, $._ptrn_paren],
-    [$._ptrn_paren, $._ptrn_brack],
+    [$._paren_pattern, $.primary_expression],
+    [$._paren_pattern, $._brack_pattern],
+    [$._paren_pattern, $.tuple],
   ],
 
   rules: {
@@ -137,18 +106,18 @@ module.exports = grammar({
       $.axiom,
     ),
 
-    let: $ => prec(PREC.def, seq(
+    let: $ => seq(
       "let",
-      choice(mk_pattern($, true, false), $.annex),
+      choice($.binder, $.annex),
       "=",
       field("value", $.expression),
-    )),
+    ),
 
-    lam: $ => prec.left(PREC.def, seq(
+    lam: $ => prec.left(seq(
       choice("lam", "con", "fun"),
       optional("extern"),
       field("name", $._name),
-      repeat(seq(mk_pattern($, true, true, PREC.pi), optional($.filter))),
+      repeat(seq(prec(PREC.pi, $.pattern), optional($.filter))),
       optional(
         seq(
           ":",
@@ -188,6 +157,38 @@ module.exports = grammar({
           ),
         )
       ),
+    ),
+
+    pattern: $ => choice(
+      prec(1, $._paren_pattern),
+      prec(2, $._brack_pattern),
+      prec(3, $._brace_pattern),
+    ),
+
+    binder: $ => choice(
+      prec(1, $._paren_pattern),
+      prec(2, $._brack_pattern),
+    ),
+
+    domain: $ => choice(
+      prec(2, $._brack_pattern),
+      prec(3, $._brace_pattern),
+    ),
+
+    _paren_pattern: $ => prec.left(choice(
+      tuple_pattern($, "(", ")", $._paren_pattern),
+      seq($.identifier, $._type_annotation),
+      $.identifier,
+    )),
+
+    _brack_pattern: $ => choice(
+      tuple_pattern($, "[", "]", $._brack_pattern),
+      seq($.identifier, $._type_annotation),
+      prec(-10, $.expression),
+    ),
+
+    _brace_pattern: $ => choice(
+      tuple_pattern($, "{", "}", $._brack_pattern),
     ),
 
     group: $ => seq(
@@ -240,6 +241,7 @@ module.exports = grammar({
     ),
 
     _literal: $ => choice(
+      $.annotated,
       $.bool_literal,
       $.int_literal,
       $.float_literal,
@@ -247,6 +249,11 @@ module.exports = grammar({
       $.char_literal,
       $.other_literal,
     ),
+
+    annotated: $ => prec.left(PREC.ann, seq(
+      field("value", $._literal),
+      $._type_annotation,
+    )),
 
     bool_literal: $ => choice("tt", "ff"),
 
@@ -335,19 +342,19 @@ module.exports = grammar({
     ),
 
     pi: $ => prec.left(choice(
-      seq(mk_pattern($, false, true, PREC.pi), $._arrow, $.expression),
-      seq("Cn", mk_pattern($, false, true)),
-      seq("Fn", mk_pattern($, false, true, PREC.pi), $._arrow, $.expression),
+      seq(prec(PREC.pi, $.domain), $._arrow, $.expression),
+      seq("Cn", $.domain),
+      seq("Fn", prec(PREC.pi, $.domain), $._arrow, $.expression),
     )),
 
     lambda: $ => choice(
       seq(
-        $._lm, repeat1(mk_pattern($, true, true, PREC.pi)),
+        $._lm, prec(PREC.pi, $.pattern),
         optional(seq(":", $.expression)),
         "=", $.expression,
       ),
       seq(
-        "cn", repeat1(mk_pattern($, true, true)),
+        "cn", repeat1($.pattern),
         "=", $.expression,
       )
     ),
@@ -371,7 +378,7 @@ module.exports = grammar({
     ),
 
     ret: $ => seq(
-      "ret", mk_pattern($, true, false),
+      "ret", $.binder,
       "=", $.expression, // callee
       "$", $.expression, // argument
       ";", $.expression, // continuation body
@@ -423,7 +430,7 @@ module.exports = grammar({
     )),
 
     match_arm: $ => seq(
-      mk_pattern($, true, false),
+      $.binder,
       "=>",
       $.expression,
     ),
@@ -435,7 +442,6 @@ module.exports = grammar({
       $.injection,
       $.application,
       $.where,
-      $.annotated,
     ),
 
     extraction: $ => prec.left(PREC.ext, seq($.expression, "#", $.expression)),
@@ -476,11 +482,6 @@ module.exports = grammar({
       ),
     )),
 
-    annotated: $ => prec.left(PREC.ann, seq(
-      field("value", $.expression),
-      $._type_annotation,
-    )),
-
     _type_annotation: $ => seq(":", field("type", $.expression)),
 
     line_comment: $ => /\/\/([^/].*)?/,
@@ -488,9 +489,6 @@ module.exports = grammar({
     doc_comment: $ => seq("///", $.doc_content),
 
     block_comment: $ => seq("/*", /[\/\*]?|(\*[^\/]|[^\*]\/|[^\/\*])*\*+/, "/"),
-
-    _ptrn_paren: $ => mk_pattern($, true, false),
-    _ptrn_brack: $ => mk_pattern($, false, false),
 
     error_sentinel: $ => "unused token",
   }

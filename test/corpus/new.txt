@@ -1,0 +1,41 @@
+=====
+simple let declaration
+=====
+
+let x = 3;
+
+---
+
+(source_file
+	(let
+		(binder (identifier))
+		value: (int_literal)))
+
+=====
+implicit pattern
+=====
+
+con foo {A: *} = ();
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(pattern (identifier) type: (primitive))
+		value: (tuple)))
+
+=====
+multiple paren domains
+=====
+
+con foo (n: Nat) (m: Nat) = ();
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(pattern (identifier) type: (primitive))
+		(pattern (identifier) type: (primitive))
+		value: (tuple)))
