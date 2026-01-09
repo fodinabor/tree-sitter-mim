@@ -43,6 +43,7 @@ function tuple_pattern($, open, close, pattern) {
             )
           )
         ),
+        optional(","),
       ),
     ),
     close,
