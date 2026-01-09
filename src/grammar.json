@@ -206,7 +206,7 @@
                   "value": 3,
                   "content": {
                     "type": "SYMBOL",
-                    "name": "pattern"
+                    "name": "lam_domain"
                   }
                 },
                 {
@@ -394,15 +394,15 @@
         }
       ]
     },
-    "pattern": {
+    "lam_domain": {
       "type": "CHOICE",
       "members": [
         {
           "type": "PREC",
-          "value": 1,
+          "value": 3,
           "content": {
             "type": "SYMBOL",
-            "name": "value_pattern"
+            "name": "pattern"
           }
         },
         {
@@ -410,15 +410,15 @@
           "value": 2,
           "content": {
             "type": "SYMBOL",
-            "name": "type_pattern"
+            "name": "battern"
           }
         },
         {
           "type": "PREC",
-          "value": 3,
+          "value": 1,
           "content": {
             "type": "SYMBOL",
-            "name": "implicit_pattern"
+            "name": "implicit"
           }
         }
       ]
@@ -428,10 +428,10 @@
       "members": [
         {
           "type": "PREC",
-          "value": 1,
+          "value": 3,
           "content": {
             "type": "SYMBOL",
-            "name": "value_pattern"
+            "name": "pattern"
           }
         },
         {
@@ -439,12 +439,12 @@
           "value": 2,
           "content": {
             "type": "SYMBOL",
-            "name": "type_pattern"
+            "name": "battern"
           }
         }
       ]
     },
-    "domain": {
+    "pi_domain": {
       "type": "CHOICE",
       "members": [
         {
@@ -452,20 +452,20 @@
           "value": 2,
           "content": {
             "type": "SYMBOL",
-            "name": "type_pattern"
+            "name": "battern"
           }
         },
         {
           "type": "PREC",
-          "value": 3,
+          "value": 1,
           "content": {
             "type": "SYMBOL",
-            "name": "implicit_pattern"
+            "name": "implicit"
           }
         }
       ]
     },
-    "value_pattern": {
+    "pattern": {
       "type": "PREC_LEFT",
       "value": 0,
       "content": {
@@ -489,7 +489,7 @@
                         "members": [
                           {
                             "type": "SYMBOL",
-                            "name": "value_pattern"
+                            "name": "pattern"
                           },
                           {
                             "type": "SYMBOL",
@@ -511,7 +511,7 @@
                               "members": [
                                 {
                                   "type": "SYMBOL",
-                                  "name": "value_pattern"
+                                  "name": "pattern"
                                 },
                                 {
                                   "type": "SYMBOL",
@@ -549,13 +549,17 @@
             ]
           },
           {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
           }
         ]
       }
     },
-    "type_pattern": {
+    "battern": {
       "type": "CHOICE",
       "members": [
         {
@@ -576,7 +580,7 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "type_pattern"
+                          "name": "battern"
                         },
                         {
                           "type": "SYMBOL",
@@ -598,7 +602,7 @@
                             "members": [
                               {
                                 "type": "SYMBOL",
-                                "name": "type_pattern"
+                                "name": "battern"
                               },
                               {
                                 "type": "SYMBOL",
@@ -649,7 +653,7 @@
         }
       ]
     },
-    "implicit_pattern": {
+    "implicit": {
       "type": "CHOICE",
       "members": [
         {
@@ -670,7 +674,7 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "type_pattern"
+                          "name": "battern"
                         },
                         {
                           "type": "SYMBOL",
@@ -692,7 +696,7 @@
                             "members": [
                               {
                                 "type": "SYMBOL",
-                                "name": "type_pattern"
+                                "name": "battern"
                               },
                               {
                                 "type": "SYMBOL",
@@ -1260,7 +1264,7 @@
                 "value": 3,
                 "content": {
                   "type": "SYMBOL",
-                  "name": "domain"
+                  "name": "pi_domain"
                 }
               },
               {
@@ -1282,7 +1286,7 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "domain"
+                "name": "pi_domain"
               }
             ]
           },
@@ -1298,7 +1302,7 @@
                 "value": 3,
                 "content": {
                   "type": "SYMBOL",
-                  "name": "domain"
+                  "name": "pi_domain"
                 }
               },
               {
@@ -1329,7 +1333,7 @@
               "value": 3,
               "content": {
                 "type": "SYMBOL",
-                "name": "pattern"
+                "name": "lam_domain"
               }
             },
             {
@@ -2069,15 +2073,15 @@
   ],
   "conflicts": [
     [
-      "value_pattern",
+      "pattern",
       "primary_expression"
     ],
     [
-      "value_pattern",
-      "type_pattern"
+      "pattern",
+      "battern"
     ],
     [
-      "value_pattern",
+      "pattern",
       "tuple"
     ]
   ],
@@ -2099,9 +2103,9 @@
     "expression",
     "primary_expression",
     "infix_expression",
-    "pattern",
-    "binder",
-    "domain"
+    "pi_domain",
+    "lam_domain",
+    "binder"
   ],
   "reserved": {}
 }

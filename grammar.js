@@ -73,15 +73,14 @@ module.exports = grammar({
     $.primary_expression,
     $.infix_expression,
 
-    $.pattern,
+    $.pi_domain,
+    $.lam_domain,
     $.binder,
-    $.domain,
   ],
 
   conflicts: $ => [
-    [$.value_pattern, $.primary_expression],
-    [$.value_pattern, $.type_pattern],
-    [$.value_pattern, $.tuple],
+    [$.pattern, $.battern],
+    [$.pattern, $.tuple],
   ],
 
   rules: {
@@ -121,7 +120,7 @@ module.exports = grammar({
       choice("lam", "con", "fun"),
       optional("extern"),
       field("name", $._name),
-      repeat(seq(prec(PREC.pi, $.pattern), optional($.filter))),
+      repeat(seq(prec(PREC.pi, $.lam_domain), optional($.filter))),
       optional(
         seq(
           ":",
@@ -163,36 +162,36 @@ module.exports = grammar({
       ),
     ),
 
-    pattern: $ => choice(
-      prec(1, $.value_pattern),
-      prec(2, $.type_pattern),
-      prec(3, $.implicit_pattern),
+    lam_domain: $ => choice(
+      prec(3, $.pattern),
+      prec(2, $.battern),
+      prec(1, $.implicit),
     ),
 
     binder: $ => choice(
-      prec(1, $.value_pattern),
-      prec(2, $.type_pattern),
+      prec(3, $.pattern),
+      prec(2, $.battern),
     ),
 
-    domain: $ => choice(
-      prec(2, $.type_pattern),
-      prec(3, $.implicit_pattern),
+    pi_domain: $ => choice(
+      prec(2, $.battern),
+      prec(1, $.implicit),
     ),
 
-    value_pattern: $ => prec.left(choice(
-      tuple_pattern($, "(", ")", $.value_pattern),
+    pattern: $ => prec.left(choice(
+      tuple_pattern($, "(", ")", $.pattern),
       seq($.identifier, $._type_annotation),
-      $.identifier,
+      prec(1, $.identifier),
     )),
 
-    type_pattern: $ => choice(
-      tuple_pattern($, "[", "]", $.type_pattern),
+    battern: $ => choice(
+      tuple_pattern($, "[", "]", $.battern),
       seq($.identifier, $._type_annotation),
       prec(-10, field("type", $.expression)),
     ),
 
-    implicit_pattern: $ => choice(
-      tuple_pattern($, "{", "}", $.type_pattern),
+    implicit: $ => choice(
+      tuple_pattern($, "{", "}", $.battern),
     ),
 
     group: $ => seq(
@@ -346,14 +345,14 @@ module.exports = grammar({
     ),
 
     pi: $ => prec.left(choice(
-      seq(prec(PREC.pi, $.domain), $._arrow, $.expression),
-      seq("Cn", $.domain),
-      seq("Fn", prec(PREC.pi, $.domain), $._arrow, $.expression),
+      seq(prec(PREC.pi, $.pi_domain), $._arrow, $.expression),
+      seq("Cn", $.pi_domain),
+      seq("Fn", prec(PREC.pi, $.pi_domain), $._arrow, $.expression),
     )),
 
     lambda: $ => choice(
       seq(
-        $._lm, prec(PREC.pi, $.pattern),
+        $._lm, prec(PREC.pi, $.lam_domain),
         optional(seq(":", $.expression)),
         "=", $.expression,
       ),
