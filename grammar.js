@@ -9,12 +9,15 @@
 
 const PREC = {
   def: -2,
-  lam: -1,
-  fun: 1,
-  ann: 2,
-  eapp: 3,
-  app: 4,
-  ext: 5,
+  bot: -1,
+  where: 1,
+  arrow: 2,
+  pi: 3,
+  ann: 4,
+  inj: 5,
+  app: 6,
+  union: 7,
+  ext: 8,
 };
 
 const PUNCTUATION = [
@@ -23,10 +26,65 @@ const PUNCTUATION = [
   "=", ",", ";", ".", "#", ":", "%", "@",
 ]
 
+// build pattern rule
+//
+// - paren: whether paren style patterns are allowed
+// - implicit: whether implicit (brace) pattern are allowed
+// - prec: current precedence
+function mk_pattern($, paren, implicit, cur_prec=PREC.bot) {
+  const options = [
+    mk_tuple_pattern($, paren, implicit),
+    ...(paren ? [$.identifier] : []),
+    seq($.expression, $._type_annotation),
+    // prec(cur_prec, $.expression),
+  ];
+
+  // return directly if only one option, otherwise use choice
+  return options.length === 1 ? options[0] : choice(...options);
+}
+
+function mk_tuple_pattern($, paren, implicit) {
+  const open = [
+    "[",
+    ...(paren    ? ["("] : []),
+    ...(implicit ? ["{"] : []),
+  ];
+  const close = [
+    "]",
+    ...(paren    ? [")"] : []),
+    ...(implicit ? ["}"] : []),
+  ];
+
+  // Build pattern choice based on parameters
+  const patternChoice = paren ? $._ptrn_paren : $._ptrn_brack;
+
+  return seq(
+    open.length === 1 ? open[0] : choice(...open),
+    optional(
+      seq(
+        choice(
+          patternChoice,
+          $.group,
+        ),
+        repeat(
+          seq(
+            ",",
+            choice(
+              patternChoice,
+              $.group,
+            )
+          )
+        ),
+      ),
+    ),
+    close.length === 1 ? close[0] : choice(...close),
+  )
+}
+
 module.exports = grammar({
   name: "mim",
 
-  word: $ => $.value_identifier,
+  word: $ => $.identifier,
 
   externals: $ => [
     $.doc_content,
@@ -41,27 +99,25 @@ module.exports = grammar({
   ],
 
   supertypes: $ => [
-    $._dependency,
-    $._declaration,
-    $._expression,
-    $._type,
-    $.identifier,
+    $.dependency,
+    $.declaration,
+    $.expression,
+    $.primary_expression,
+    $.infix_expression,
   ],
 
   conflicts: $ => [
-    [$.pattern, $.tuple],
-    [$.pattern, $._expression],
-    [$.group, $._expression],
-    [$.where, $.array_type],
+    [$.primary_expression, $._ptrn_paren],
+    [$._ptrn_paren, $._ptrn_brack],
   ],
 
   rules: {
     source_file: $ => seq(
-      repeat($._dependency),
-      repeat(choice($._declaration, ";"))
+      repeat($.dependency),
+      optional($._declarations),
     ),
 
-    _dependency: $ => choice(
+    dependency: $ => choice(
       $.import,
       $.plugin,
     ),
@@ -70,65 +126,50 @@ module.exports = grammar({
 
     plugin: $ => seq("plugin", $.identifier, ";"),
 
-    _declaration: $ => choice(
+    _declarations: $ => prec.left(repeat1(seq(
+      $.declaration,
+      optional(";"),
+    ))),
+
+    declaration: $ => choice(
       $.let,
       $.lam,
-      $.sigma,
       $.axiom,
     ),
 
     let: $ => prec(PREC.def, seq(
       "let",
-      choice($.pattern, $.annex),
+      choice(mk_pattern($, true, false), $.annex),
       "=",
-      field("value", $._primary_expression),
+      field("value", $.expression),
     )),
 
     lam: $ => prec.left(PREC.def, seq(
       choice("lam", "con", "fun"),
       optional("extern"),
       field("name", $._name),
-      repeat(seq($.pattern, optional($.filter))),
+      repeat(seq(mk_pattern($, true, true, PREC.pi), optional($.filter))),
       optional(
         seq(
           ":",
-          field("type", $._primary_expression),
+          field("type", $.expression),
         )
       ),
       optional(
         seq(
           "=",
-          field("value", $._primary_expression),
+          field("value", $.expression),
         )
       ),
     )),
 
-    filter: $ => seq("@", $._expression),
-
-    sigma: $ => seq(
-      "Sigma",
-      optional("extern"),
-      field("name", $.identifier),
-      optional($._type_annotation),
-      optional(
-        seq(
-          ",",
-          field("arity", $.int_literal),
-        )
-      ),
-      optional(
-        seq(
-          "=",
-          field("value", $.pattern),
-        )
-      ),
-    ),
+    filter: $ => seq("@", $.expression),
 
     axiom: $ => seq(
       "axm",
       field("name", $.annex),
       ":",
-      field("type", $._primary_expression),
+      field("type", $.expression),
       optional(
         seq(
           ",",
@@ -149,59 +190,6 @@ module.exports = grammar({
       ),
     ),
 
-    pattern: $ => prec.right(choice(
-      // field("type", $._expression),
-      seq(
-        $.identifier,
-        optional($._type_annotation)
-      ),
-      seq(
-        "(",
-        optional(
-          seq(
-            choice(
-              $.pattern,
-              $.group,
-            ),
-            repeat(
-              seq(
-                ",",
-                choice(
-                  $.pattern,
-                  $.group,
-                )
-              )
-            ),
-          ),
-        ),
-        ")",
-      ),
-      seq(
-        choice("[", "{"),
-          choice(
-            $.pattern,
-            $.group,
-            field("type", $._primary_expression),
-          ),
-          repeat(
-            seq(
-              ",",
-              choice(
-                $.pattern,
-                $.group,
-                field("type", $._primary_expression),
-              ),
-            )
-          ),
-        choice("]", "}"),
-      ),
-    )),
-
-    battern: $ => choice(
-      field("type", $._primary_expression),
-      seq($.identifier, $._type_annotation),
-    ),
-
     group: $ => seq(
       $.identifier,
       $.identifier,
@@ -211,11 +199,7 @@ module.exports = grammar({
 
     _name: $ => choice($.identifier, $.annex),
 
-    identifier: $ => choice("return", $.value_identifier, $.type_identifier),
-
-    value_identifier: $ => /[_a-z][_a-zA-Z0-9]*/,
-
-    type_identifier: $ => /[A-Z][_a-zA-Z0-9]*/,
+    identifier: $ => /[_a-zA-Z][_a-zA-Z0-9]*/,
 
     annex: $ => prec.left(seq(
       "%",
@@ -298,135 +282,215 @@ module.exports = grammar({
 
     other_literal: $ => choice("⊥", ".bot", "⊤", ".top"),
 
-    _primary_expression: $ => prec.left(choice(
-      $._expression,
-      $.where,
-    )),
+    expression: $ => choice(
+      $.primary_expression,
+      $.infix_expression,
+    ),
 
-    where: $ => prec.left(choice(
-      seq(
-        repeat1(choice($._declaration, ";")),
-        $._expression,
-      ),
-      seq(
-        repeat(choice($._declaration, ";")),
-        $._expression,
-        seq(
-          "where",
-          repeat(choice($._declaration, ";")),
-          "end",
-        )
-      )
-    )),
-
-    _expression: $ => choice(
-      $.annotated,
-      $._type,
-      $._literal,
+    primary_expression: $ => prec.left(choice(
+      $.primitive,
       $.identifier,
       $.annex,
-      $.application,
-      $.extraction,
+      $._literal,
+      $.decl_expr,
+      $.pi,
       $.lambda,
-      $.tuple,
-    ),
-
-    application: $ => choice(
-      prec.left(PREC.app, seq($._expression, $._expression)),
-      prec.left(PREC.eapp, seq($._expression, "@", $._expression)),
-    ),
-
-    extraction: $ => prec.left(PREC.ext, seq($._expression, "#", $._expression)),
-
-    annotated: $ => prec.left(PREC.ann, seq(
-      field("value", $._expression),
-      $._type_annotation,
-    )),
-
-    _type_annotation: $ => seq(":", field("type", $._expression)),
-
-    lambda: $ => prec(PREC.lam, seq(
-      choice("lm", "λ", "cn", "fn", "ret"),
-      repeat(seq($.pattern, optional($.filter))),
-      optional(
-        seq(
-          ":",
-          field("type", $._primary_expression),
-        )
-      ),
-      "=",
-      field("value", $._primary_expression),
-    )),
-
-    tuple: $ => seq(
-      choice("(", "[", "{"),
-      optional(
-        seq(
-          $._primary_expression,
-          repeat(seq(",", $._primary_expression)),
-          optional(","),
-        )
-      ),
-      choice(")", "]", "}"),
-    ),
-
-    _type: $ => choice(
-      $.primitive_type,
-      $.function_type,
-      $.array_type,
+      $.insert,
+      $.ret,
+      $.uniq,
+      $.array,
       $.pack,
-    ),
+      $.tuple,
+      $.match,
+    )),
 
-    primitive_type: $ => choice(
+    primitive: $ => choice(
       "Univ",
-      seq("Type", $.int_literal),
-      "*",
-      "★",
-      "□",
       "Nat",
-      prec.left(PREC.app, seq("Idx", $._expression)),
+      "Idx",
       "Bool",
+      "I1",
+      "I8",
+      "I16",
+      "I32",
+      "I64",
+      "*", "★",
+      "□"
     ),
 
-    function_type: $ => prec.right(PREC.fun,
-      choice(
-        seq($._expression, choice("->", "→"), $._primary_expression),
-        seq($.pattern, choice("->", "→"), $._primary_expression),
-        seq("Cn", choice($._primary_expression, $.pattern)),
-        seq(
-          "Fn",
-          $.pattern,
-          choice("->", "→"),
-          $._primary_expression
-        ),
+    decl_expr: $ => seq(
+      $._declarations,
+      $.expression,
+    ),
+
+    _lm: $ => choice(
+      "lm",
+      "λ",
+      "fn",
+    ),
+
+    _arrow: $ => choice(
+      "->",
+      "→"
+    ),
+
+    pi: $ => prec.left(choice(
+      seq(mk_pattern($, false, true, PREC.pi), $._arrow, $.expression),
+      seq("Cn", mk_pattern($, false, true)),
+      seq("Fn", mk_pattern($, false, true, PREC.pi), $._arrow, $.expression),
+    )),
+
+    lambda: $ => choice(
+      seq(
+        $._lm, repeat1(mk_pattern($, true, true, PREC.pi)),
+        optional(seq(":", $.expression)),
+        "=", $.expression,
+      ),
+      seq(
+        "cn", repeat1(mk_pattern($, true, true)),
+        "=", $.expression,
       )
     ),
 
-    array_type: $ => seq(
+    // insertion expression: `ins ((0, 1), 2, 2)`
+    insert: $ => seq(
+      choice("ins", "insert"),
+      "(",
+      $.expression, // tuple to insert into
+      ",",
+      $.expression, // insertion index
+      ",",
+      $.expression, // insert value
+      ")",
+    ),
+
+    uniq: $ => seq(
+      choice("{|", "⦃"),
+      $.expression, // singleton type
+      choice("|}", "⦄")
+    ),
+
+    ret: $ => seq(
+      "ret", mk_pattern($, true, false),
+      "=", $.expression, // callee
+      "$", $.expression, // argument
+      ";", $.expression, // continuation body
+    ),
+
+    array: $ => seq(
       choice("«", "⟪", "<<"),
-      field("size", $._primary_expression),
+      field("size", $.expression),
       repeat(seq(
-        ",", field("size", $._primary_expression)
+        ",", field("size", $.expression)
       )),
       optional(","),
       ";",
-      field("type", $._primary_expression),
+      field("type", $.expression),
       choice("»", "⟫", ">>"),
     ),
 
     pack: $ => seq(
       choice("‹", "⟨", "<"),
-      $._primary_expression,
+      $.expression,
       ";",
-      $._primary_expression,
+      $.expression,
       choice("›", "⟩", ">"),
     ),
+
+    tuple: $ => seq(
+      "(",
+      optional(
+        seq(
+          $.expression,
+          repeat(seq(",", $.expression)),
+          optional(","),
+        )
+      ),
+      ")",
+    ),
+
+    match: $ => prec.left(seq(
+      "match",
+      $.expression,
+      "with",
+      optional($.match_arm),
+      repeat(
+        seq(
+          "|",
+          $.match_arm,
+        )
+      )
+    )),
+
+    match_arm: $ => seq(
+      mk_pattern($, true, false),
+      "=>",
+      $.expression,
+    ),
+
+    infix_expression: $ => choice(
+      $.extraction,
+      $.arrow,
+      $.union,
+      $.injection,
+      $.application,
+      $.where,
+      $.annotated,
+    ),
+
+    extraction: $ => prec.left(PREC.ext, seq($.expression, "#", $.expression)),
+
+    arrow: $ => prec.right(PREC.arrow,
+      seq($.expression, choice("->", "→"), $.expression),
+    ),
+
+    union: $ => prec.left(PREC.union, seq(
+      $.expression,
+      repeat1(
+        seq(
+          "∪",
+          $.expression,
+        )
+      )
+    )),
+
+    injection: $ => prec.left(PREC.inj, seq(
+      $.expression,
+      "inj",
+      $.expression,
+    )),
+
+    application: $ => choice(
+      prec.left(PREC.app, seq($.expression, $.expression)),
+      prec.left(PREC.app, seq($.expression, "@", $.expression)),
+    ),
+
+    where: $ => prec.left(PREC.where, choice(
+      seq(
+        $.expression,
+        seq(
+          "where",
+          repeat(choice($.declaration, ";")),
+          "end",
+        )
+      ),
+    )),
+
+    annotated: $ => prec.left(PREC.ann, seq(
+      field("value", $.expression),
+      $._type_annotation,
+    )),
+
+    _type_annotation: $ => seq(":", field("type", $.expression)),
 
     line_comment: $ => /\/\/([^/].*)?/,
 
     doc_comment: $ => seq("///", $.doc_content),
 
     block_comment: $ => seq("/*", /[\/\*]?|(\*[^\/]|[^\*]\/|[^\/\*])*\*+/, "/"),
+
+    _ptrn_paren: $ => mk_pattern($, true, false),
+    _ptrn_brack: $ => mk_pattern($, false, false),
 
     error_sentinel: $ => "unused token",
   }
