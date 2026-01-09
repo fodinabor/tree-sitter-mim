@@ -398,28 +398,16 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "PREC",
-          "value": 3,
-          "content": {
-            "type": "SYMBOL",
-            "name": "pattern"
-          }
+          "type": "SYMBOL",
+          "name": "pattern"
         },
         {
-          "type": "PREC",
-          "value": 2,
-          "content": {
-            "type": "SYMBOL",
-            "name": "battern"
-          }
+          "type": "SYMBOL",
+          "name": "battern"
         },
         {
-          "type": "PREC",
-          "value": 1,
-          "content": {
-            "type": "SYMBOL",
-            "name": "implicit"
-          }
+          "type": "SYMBOL",
+          "name": "implicit"
         }
       ]
     },
@@ -427,20 +415,12 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "PREC",
-          "value": 3,
-          "content": {
-            "type": "SYMBOL",
-            "name": "pattern"
-          }
+          "type": "SYMBOL",
+          "name": "pattern"
         },
         {
-          "type": "PREC",
-          "value": 2,
-          "content": {
-            "type": "SYMBOL",
-            "name": "battern"
-          }
+          "type": "SYMBOL",
+          "name": "battern"
         }
       ]
     },
@@ -448,20 +428,12 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "PREC",
-          "value": 2,
-          "content": {
-            "type": "SYMBOL",
-            "name": "battern"
-          }
+          "type": "SYMBOL",
+          "name": "battern"
         },
         {
-          "type": "PREC",
-          "value": 1,
-          "content": {
-            "type": "SYMBOL",
-            "name": "implicit"
-          }
+          "type": "SYMBOL",
+          "name": "implicit"
         }
       ]
     },
@@ -475,8 +447,15 @@
             "type": "SEQ",
             "members": [
               {
-                "type": "STRING",
-                "value": "("
+                "type": "TOKEN",
+                "content": {
+                  "type": "PREC",
+                  "value": 10,
+                  "content": {
+                    "type": "STRING",
+                    "value": "("
+                  }
+                }
               },
               {
                 "type": "CHOICE",
@@ -489,11 +468,11 @@
                         "members": [
                           {
                             "type": "SYMBOL",
-                            "name": "pattern"
+                            "name": "group"
                           },
                           {
                             "type": "SYMBOL",
-                            "name": "group"
+                            "name": "pattern"
                           }
                         ]
                       },
@@ -511,11 +490,11 @@
                               "members": [
                                 {
                                   "type": "SYMBOL",
-                                  "name": "pattern"
+                                  "name": "group"
                                 },
                                 {
                                   "type": "SYMBOL",
-                                  "name": "group"
+                                  "name": "pattern"
                                 }
                               ]
                             }
@@ -580,11 +559,11 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "battern"
+                          "name": "group"
                         },
                         {
                           "type": "SYMBOL",
-                          "name": "group"
+                          "name": "battern"
                         }
                       ]
                     },
@@ -602,11 +581,11 @@
                             "members": [
                               {
                                 "type": "SYMBOL",
-                                "name": "battern"
+                                "name": "group"
                               },
                               {
                                 "type": "SYMBOL",
-                                "name": "group"
+                                "name": "battern"
                               }
                             ]
                           }
@@ -640,7 +619,7 @@
           ]
         },
         {
-          "type": "PREC",
+          "type": "PREC_RIGHT",
           "value": -10,
           "content": {
             "type": "FIELD",
@@ -674,11 +653,11 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "battern"
+                          "name": "group"
                         },
                         {
                           "type": "SYMBOL",
-                          "name": "group"
+                          "name": "battern"
                         }
                       ]
                     },
@@ -696,11 +675,11 @@
                             "members": [
                               {
                                 "type": "SYMBOL",
-                                "name": "battern"
+                                "name": "group"
                               },
                               {
                                 "type": "SYMBOL",
-                                "name": "group"
+                                "name": "battern"
                               }
                             ]
                           }
@@ -760,8 +739,28 @@
       ]
     },
     "identifier": {
-      "type": "PATTERN",
-      "value": "[_a-zA-Z][_a-zA-Z0-9]*"
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[_a-zA-Z][_a-zA-Z0-9]*"
+        }
+      }
+    },
+    "_keyword": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "where"
+        },
+        {
+          "type": "STRING",
+          "value": "end"
+        }
+      ]
     },
     "annex": {
       "type": "PREC_LEFT",
@@ -2074,15 +2073,7 @@
   "conflicts": [
     [
       "pattern",
-      "primary_expression"
-    ],
-    [
-      "pattern",
       "battern"
-    ],
-    [
-      "pattern",
-      "tuple"
     ]
   ],
   "precedences": [],

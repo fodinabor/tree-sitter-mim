@@ -31,15 +31,15 @@ function tuple_pattern($, open, close, pattern) {
     optional(
       seq(
         choice(
-          pattern,
           $.group,
+          pattern,
         ),
         repeat(
           seq(
             ",",
             choice(
-              pattern,
               $.group,
+              pattern,
             )
           )
         ),
@@ -80,7 +80,6 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.pattern, $.battern],
-    [$.pattern, $.tuple],
   ],
 
   rules: {
@@ -163,23 +162,23 @@ module.exports = grammar({
     ),
 
     lam_domain: $ => choice(
-      prec(3, $.pattern),
-      prec(2, $.battern),
-      prec(1, $.implicit),
+      $.pattern,
+      $.battern,
+      $.implicit,
     ),
 
     binder: $ => choice(
-      prec(3, $.pattern),
-      prec(2, $.battern),
+      $.pattern,
+      $.battern,
     ),
 
     pi_domain: $ => choice(
-      prec(2, $.battern),
-      prec(1, $.implicit),
+      $.battern,
+      $.implicit,
     ),
 
     pattern: $ => prec.left(choice(
-      tuple_pattern($, "(", ")", $.pattern),
+      tuple_pattern($, token(prec(10, "(")), ")", $.pattern),
       seq($.identifier, $._type_annotation),
       prec(1, $.identifier),
     )),
@@ -187,7 +186,7 @@ module.exports = grammar({
     battern: $ => choice(
       tuple_pattern($, "[", "]", $.battern),
       seq($.identifier, $._type_annotation),
-      prec(-10, field("type", $.expression)),
+      prec.right(-10, field("type", $.expression)),
     ),
 
     implicit: $ => choice(

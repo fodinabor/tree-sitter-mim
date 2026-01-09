@@ -39,3 +39,26 @@ con foo (n: Nat) (m: Nat) = ();
 		(pattern (pattern (identifier) type: (primitive)))
 		(pattern (pattern (identifier) type: (primitive)))
 		value: (tuple)))
+
+=====
+simple group
+=====
+
+let (a b: Nat) = 0;
+
+---
+
+(source_file
+	(let
+		(pattern (group (identifier) (identifier) type: (primitive)))
+		value: (int_literal)))
+
+=====
+where semicolon
+=====
+
+con t() = body
+	where
+	    con body (acc: A) = head;
+	end
+end;
