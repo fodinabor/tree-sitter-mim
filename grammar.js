@@ -72,12 +72,16 @@ module.exports = grammar({
     $.expression,
     $.primary_expression,
     $.infix_expression,
+
+    $.pattern,
+    $.binder,
+    $.domain,
   ],
 
   conflicts: $ => [
-    [$._paren_pattern, $.primary_expression],
-    [$._paren_pattern, $._brack_pattern],
-    [$._paren_pattern, $.tuple],
+    [$.value_pattern, $.primary_expression],
+    [$.value_pattern, $.type_pattern],
+    [$.value_pattern, $.tuple],
   ],
 
   rules: {
@@ -160,35 +164,35 @@ module.exports = grammar({
     ),
 
     pattern: $ => choice(
-      prec(1, $._paren_pattern),
-      prec(2, $._brack_pattern),
-      prec(3, $._brace_pattern),
+      prec(1, $.value_pattern),
+      prec(2, $.type_pattern),
+      prec(3, $.implicit_pattern),
     ),
 
     binder: $ => choice(
-      prec(1, $._paren_pattern),
-      prec(2, $._brack_pattern),
+      prec(1, $.value_pattern),
+      prec(2, $.type_pattern),
     ),
 
     domain: $ => choice(
-      prec(2, $._brack_pattern),
-      prec(3, $._brace_pattern),
+      prec(2, $.type_pattern),
+      prec(3, $.implicit_pattern),
     ),
 
-    _paren_pattern: $ => prec.left(choice(
-      tuple_pattern($, "(", ")", $._paren_pattern),
+    value_pattern: $ => prec.left(choice(
+      tuple_pattern($, "(", ")", $.value_pattern),
       seq($.identifier, $._type_annotation),
       $.identifier,
     )),
 
-    _brack_pattern: $ => choice(
-      tuple_pattern($, "[", "]", $._brack_pattern),
+    type_pattern: $ => choice(
+      tuple_pattern($, "[", "]", $.type_pattern),
       seq($.identifier, $._type_annotation),
-      prec(-10, $.expression),
+      prec(-10, field("type", $.expression)),
     ),
 
-    _brace_pattern: $ => choice(
-      tuple_pattern($, "{", "}", $._brack_pattern),
+    implicit_pattern: $ => choice(
+      tuple_pattern($, "{", "}", $.type_pattern),
     ),
 
     group: $ => seq(

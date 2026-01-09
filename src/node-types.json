@@ -1,5 +1,19 @@
 [
   {
+    "type": "binder",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "type_pattern",
+        "named": true
+      },
+      {
+        "type": "value_pattern",
+        "named": true
+      }
+    ]
+  },
+  {
     "type": "declaration",
     "named": true,
     "subtypes": [
@@ -27,6 +41,20 @@
       },
       {
         "type": "plugin",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "domain",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "implicit_pattern",
+        "named": true
+      },
+      {
+        "type": "type_pattern",
         "named": true
       }
     ]
@@ -71,6 +99,24 @@
       },
       {
         "type": "where",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "pattern",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "implicit_pattern",
+        "named": true
+      },
+      {
+        "type": "type_pattern",
+        "named": true
+      },
+      {
+        "type": "value_pattern",
         "named": true
       }
     ]
@@ -360,40 +406,6 @@
     }
   },
   {
-    "type": "binder",
-    "named": true,
-    "fields": {
-      "type": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "group",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "block_comment",
     "named": true,
     "fields": {}
@@ -432,40 +444,6 @@
       "types": [
         {
           "type": "doc_content",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "domain",
-    "named": true,
-    "fields": {
-      "type": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "group",
-          "named": true
-        },
-        {
-          "type": "identifier",
           "named": true
         }
       ]
@@ -522,6 +500,25 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "implicit_pattern",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "group",
+          "named": true
+        },
+        {
+          "type": "type_pattern",
           "named": true
         }
       ]
@@ -739,40 +736,6 @@
     }
   },
   {
-    "type": "pattern",
-    "named": true,
-    "fields": {
-      "type": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "group",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "pi",
     "named": true,
     "fields": {},
@@ -866,6 +829,40 @@
     }
   },
   {
+    "type": "type_pattern",
+    "named": true,
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "group",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type_pattern",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "union",
     "named": true,
     "fields": {},
@@ -890,6 +887,40 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "value_pattern",
+    "named": true,
+    "fields": {
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "group",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "value_pattern",
           "named": true
         }
       ]

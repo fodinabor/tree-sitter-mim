@@ -402,7 +402,7 @@
           "value": 1,
           "content": {
             "type": "SYMBOL",
-            "name": "_paren_pattern"
+            "name": "value_pattern"
           }
         },
         {
@@ -410,7 +410,7 @@
           "value": 2,
           "content": {
             "type": "SYMBOL",
-            "name": "_brack_pattern"
+            "name": "type_pattern"
           }
         },
         {
@@ -418,7 +418,7 @@
           "value": 3,
           "content": {
             "type": "SYMBOL",
-            "name": "_brace_pattern"
+            "name": "implicit_pattern"
           }
         }
       ]
@@ -431,7 +431,7 @@
           "value": 1,
           "content": {
             "type": "SYMBOL",
-            "name": "_paren_pattern"
+            "name": "value_pattern"
           }
         },
         {
@@ -439,7 +439,7 @@
           "value": 2,
           "content": {
             "type": "SYMBOL",
-            "name": "_brack_pattern"
+            "name": "type_pattern"
           }
         }
       ]
@@ -452,7 +452,7 @@
           "value": 2,
           "content": {
             "type": "SYMBOL",
-            "name": "_brack_pattern"
+            "name": "type_pattern"
           }
         },
         {
@@ -460,12 +460,12 @@
           "value": 3,
           "content": {
             "type": "SYMBOL",
-            "name": "_brace_pattern"
+            "name": "implicit_pattern"
           }
         }
       ]
     },
-    "_paren_pattern": {
+    "value_pattern": {
       "type": "PREC_LEFT",
       "value": 0,
       "content": {
@@ -489,7 +489,7 @@
                         "members": [
                           {
                             "type": "SYMBOL",
-                            "name": "_paren_pattern"
+                            "name": "value_pattern"
                           },
                           {
                             "type": "SYMBOL",
@@ -511,7 +511,7 @@
                               "members": [
                                 {
                                   "type": "SYMBOL",
-                                  "name": "_paren_pattern"
+                                  "name": "value_pattern"
                                 },
                                 {
                                   "type": "SYMBOL",
@@ -555,7 +555,7 @@
         ]
       }
     },
-    "_brack_pattern": {
+    "type_pattern": {
       "type": "CHOICE",
       "members": [
         {
@@ -576,7 +576,7 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "_brack_pattern"
+                          "name": "type_pattern"
                         },
                         {
                           "type": "SYMBOL",
@@ -598,7 +598,7 @@
                             "members": [
                               {
                                 "type": "SYMBOL",
-                                "name": "_brack_pattern"
+                                "name": "type_pattern"
                               },
                               {
                                 "type": "SYMBOL",
@@ -639,13 +639,17 @@
           "type": "PREC",
           "value": -10,
           "content": {
-            "type": "SYMBOL",
-            "name": "expression"
+            "type": "FIELD",
+            "name": "type",
+            "content": {
+              "type": "SYMBOL",
+              "name": "expression"
+            }
           }
         }
       ]
     },
-    "_brace_pattern": {
+    "implicit_pattern": {
       "type": "CHOICE",
       "members": [
         {
@@ -666,7 +670,7 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "_brack_pattern"
+                          "name": "type_pattern"
                         },
                         {
                           "type": "SYMBOL",
@@ -688,7 +692,7 @@
                             "members": [
                               {
                                 "type": "SYMBOL",
-                                "name": "_brack_pattern"
+                                "name": "type_pattern"
                               },
                               {
                                 "type": "SYMBOL",
@@ -2065,15 +2069,15 @@
   ],
   "conflicts": [
     [
-      "_paren_pattern",
+      "value_pattern",
       "primary_expression"
     ],
     [
-      "_paren_pattern",
-      "_brack_pattern"
+      "value_pattern",
+      "type_pattern"
     ],
     [
-      "_paren_pattern",
+      "value_pattern",
       "tuple"
     ]
   ],
@@ -2094,7 +2098,10 @@
     "declaration",
     "expression",
     "primary_expression",
-    "infix_expression"
+    "infix_expression",
+    "pattern",
+    "binder",
+    "domain"
   ],
   "reserved": {}
 }
