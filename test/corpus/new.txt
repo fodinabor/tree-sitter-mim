@@ -62,3 +62,19 @@ con t() = body
 	    con body (acc: A) = head;
 	end
 end;
+
+=====
+annex float whoopsie
+=====
+
+let x = %test.foo.bar;
+
+---
+
+(source_file
+	(let
+		(pattern (identifier))
+		value: (annex
+			module: (identifier)
+			name: (identifier)
+			subtag: (identifier))))

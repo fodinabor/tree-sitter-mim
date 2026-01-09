@@ -147,7 +147,7 @@ module.exports = grammar({
       field("name", $.identifier),
       optional(
         choice(
-          seq(".", field("subtag", $.identifier)),
+          seq(token(prec(1, ".")), field("subtag", $.identifier)),
           $._subtags,
         )
       )
@@ -330,8 +330,8 @@ module.exports = grammar({
     _literal: $ => choice(
       $.annotated,
       $.bool_literal,
-      $.int_literal,
       $.float_literal,
+      $.int_literal,
       $.string_literal,
       $.char_literal,
     ),
@@ -354,7 +354,7 @@ module.exports = grammar({
       /[\+\-]?0[xX][0-9a-fA-F]+/,
     ),
 
-    float_literal: $ => token(prec(-1, choice(
+    float_literal: $ => token(choice(
       // decimal float literal x.
       /[\+\-]?[0-9]+\.[0-9]*([eE][\+\-][0-9]+)?/,
       // decimal float literal .x
@@ -367,7 +367,7 @@ module.exports = grammar({
       /[\+\-]?[0-9a-fA-F]*\.[0-9a-fA-F]+([pP][\+\-][0-9]+)?/,
       // hexadecimal float literal p
       /[\+\-]?[0-9a-fA-F]+[pP][\+\-][0-9]+/,
-    ))),
+    )),
 
     string_literal: $ => /\"(\\\"|[^\"])*\"/,
 
