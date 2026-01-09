@@ -22,11 +22,27 @@
         "named": true
       },
       {
+        "type": "ccon",
+        "named": true
+      },
+      {
+        "type": "cfun",
+        "named": true
+      },
+      {
         "type": "lam",
         "named": true
       },
       {
         "type": "let",
+        "named": true
+      },
+      {
+        "type": "rec",
+        "named": true
+      },
+      {
+        "type": "rule",
         "named": true
       }
     ]
@@ -174,10 +190,6 @@
         "named": true
       },
       {
-        "type": "other_literal",
-        "named": true
-      },
-      {
         "type": "pack",
         "named": true
       },
@@ -279,10 +291,6 @@
           },
           {
             "type": "int_literal",
-            "named": true
-          },
-          {
-            "type": "other_literal",
             "named": true
           },
           {
@@ -450,6 +458,48 @@
     "fields": {}
   },
   {
+    "type": "ccon",
+    "named": true,
+    "fields": {
+      "domain": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "battern",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "cfun",
+    "named": true,
+    "fields": {
+      "domain": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "battern",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "decl_expr",
     "named": true,
     "fields": {},
@@ -534,6 +584,21 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "guard",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -750,11 +815,6 @@
     }
   },
   {
-    "type": "other_literal",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "pack",
     "named": true,
     "fields": {},
@@ -843,6 +903,50 @@
     "fields": {}
   },
   {
+    "type": "rec",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "annex",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "lam",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "ret",
     "named": true,
     "fields": {},
@@ -856,6 +960,29 @@
         },
         {
           "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "rule",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "binder",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "guard",
           "named": true
         }
       ]
@@ -1078,6 +1205,10 @@
     "named": false
   },
   {
+    "type": "Type",
+    "named": false
+  },
+  {
     "type": "Univ",
     "named": false
   },
@@ -1090,7 +1221,19 @@
     "named": false
   },
   {
+    "type": "and",
+    "named": false
+  },
+  {
     "type": "axm",
+    "named": false
+  },
+  {
+    "type": "ccon",
+    "named": false
+  },
+  {
+    "type": "cfun",
     "named": false
   },
   {
@@ -1175,11 +1318,23 @@
     "named": false
   },
   {
+    "type": "norm",
+    "named": false
+  },
+  {
     "type": "plugin",
     "named": false
   },
   {
+    "type": "rec",
+    "named": false
+  },
+  {
     "type": "ret",
+    "named": false
+  },
+  {
+    "type": "rule",
     "named": false
   },
   {
@@ -1188,6 +1343,10 @@
   },
   {
     "type": "tt",
+    "named": false
+  },
+  {
+    "type": "when",
     "named": false
   },
   {

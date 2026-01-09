@@ -184,38 +184,14 @@ module.exports = grammar({
     ))),
 
     declaration: $ => choice(
-      $.let,
-      $.lam,
       $.axiom,
+      $.cfun,
+      $.ccon,
+      $.let,
+      $.rec,
+      $.lam,
+      $.rule,
     ),
-
-    let: $ => seq(
-      "let",
-      choice($.binder, $.annex),
-      "=",
-      field("value", $.expression),
-    ),
-
-    lam: $ => prec.left(seq(
-      choice("lam", "con", "fun"),
-      optional("extern"),
-      field("name", $._name),
-      repeat(seq(prec(PREC.pi, $.lam_domain), optional($.filter))),
-      optional(
-        seq(
-          ":",
-          field("type", $.expression),
-        )
-      ),
-      optional(
-        seq(
-          "=",
-          field("value", $.expression),
-        )
-      ),
-    )),
-
-    filter: $ => seq("@", $.expression),
 
     axiom: $ => seq(
       "axm",
@@ -241,6 +217,76 @@ module.exports = grammar({
         )
       ),
     ),
+
+    cfun: $ => seq(
+      "cfun",
+      field("domain", $.battern),
+      $._type_annotation,
+    ),
+
+    ccon: $ => seq(
+      "ccon",
+      field("domain", $.battern),
+    ),
+
+    let: $ => seq(
+      "let",
+      choice($.binder, $.annex),
+      "=",
+      field("value", $.expression),
+    ),
+
+    rec: $ => seq(
+      "rec",
+      field("name", $._name),
+      optional($._type_annotation),
+      "=", $.expression,
+      repeat(
+        seq(
+          "and",
+          field("name", $._name),
+          optional($._type_annotation),
+          "=", $.expression,
+        )
+      ),
+      optional(seq("and", $.lam)),
+    ),
+
+    lam: $ => prec.left(seq(
+      choice("lam", "con", "fun"),
+      optional("extern"),
+      field("name", $._name),
+      repeat(seq(prec(PREC.pi, $.lam_domain), optional($.filter))),
+      optional(
+        seq(
+          ":",
+          field("type", $.expression),
+        )
+      ),
+      optional(
+        seq(
+          "=",
+          field("value", $.expression),
+        )
+      ),
+    )),
+
+    rule: $ => seq(
+      choice("rule", "norm"),
+      $.binder,
+      ":",
+      $.expression,
+      optional($.guard),
+      "=>",
+      $.expression,
+    ),
+
+    guard: $ => seq(
+      "when",
+      $.expression,
+    ),
+
+    filter: $ => seq("@", $.expression),
 
     expression: $ => choice(
       $.primary_expression,
