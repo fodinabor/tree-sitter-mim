@@ -78,3 +78,19 @@ let x = %test.foo.bar;
 			module: (identifier)
 			name: (identifier)
 			subtag: (identifier))))
+
+=====
+fake battern
+=====
+
+lam foo [[Nat] -> Nat] = 0
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(battern
+			(battern
+				type: (pi (battern (battern type: (primitive))) (primitive))))
+		value: (int_literal)))

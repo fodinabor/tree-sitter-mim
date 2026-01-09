@@ -122,7 +122,7 @@ module.exports = grammar({
     battern: $ => choice(
       tuple_pattern($, "[", "]", $.battern),
       seq($.identifier, $._type_annotation),
-      prec.right(-10, field("type", $.expression)),
+      field("type", $.expression),
     ),
 
     implicit: $ => choice(

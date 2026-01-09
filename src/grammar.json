@@ -299,15 +299,11 @@
           ]
         },
         {
-          "type": "PREC_RIGHT",
-          "value": -10,
+          "type": "FIELD",
+          "name": "type",
           "content": {
-            "type": "FIELD",
-            "name": "type",
-            "content": {
-              "type": "SYMBOL",
-              "name": "expression"
-            }
+            "type": "SYMBOL",
+            "name": "expression"
           }
         }
       ]
