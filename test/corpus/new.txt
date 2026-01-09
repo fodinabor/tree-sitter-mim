@@ -112,3 +112,12 @@ let foo = fn mem (a: Nat) = 0;
 				(pattern (identifier) type: (primitive)))
 			(int_literal))))
 
+=====
+let annex
+=====
+
+let %test.foo = 0;
+
+---
+
+(source_file (let (annex module: (identifier) name: (identifier)) value: (int_literal)))

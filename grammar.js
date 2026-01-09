@@ -141,14 +141,15 @@ module.exports = grammar({
 
     identifier: $ => /[_a-zA-Z][_a-zA-Z0-9]*/,
 
-    annex: $ => prec.left(seq(
-      "%",
+    annex: $ => seq("%", $._annex_body),
+
+    _annex_body: $ => prec.left(seq(
       field("module", $.identifier),
-      ".",
+      token.immediate("."),
       field("name", $.identifier),
       optional(
         choice(
-          seq(token(prec(1, ".")), field("subtag", $.identifier)),
+          seq(token.immediate(prec(1, ".")), field("subtag", $.identifier)),
           $._subtags,
         )
       )
@@ -230,9 +231,14 @@ module.exports = grammar({
       field("domain", $.battern),
     ),
 
+    // dirty hack to make let prefer annex over battern -> expression -> annex
+    let_annex: $ => seq(token(prec(1, "%")), $._annex_body),
     let: $ => seq(
       "let",
-      choice($.binder, $.annex),
+      choice(
+        alias($.let_annex, $.annex),
+        $.binder
+      ),
       "=",
       field("value", $.expression),
     ),

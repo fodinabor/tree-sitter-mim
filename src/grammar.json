@@ -455,15 +455,24 @@
       "value": "[_a-zA-Z][_a-zA-Z0-9]*"
     },
     "annex": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "%"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_annex_body"
+        }
+      ]
+    },
+    "_annex_body": {
       "type": "PREC_LEFT",
       "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
-          {
-            "type": "STRING",
-            "value": "%"
-          },
           {
             "type": "FIELD",
             "name": "module",
@@ -473,8 +482,11 @@
             }
           },
           {
-            "type": "STRING",
-            "value": "."
+            "type": "IMMEDIATE_TOKEN",
+            "content": {
+              "type": "STRING",
+              "value": "."
+            }
           },
           {
             "type": "FIELD",
@@ -494,7 +506,7 @@
                     "type": "SEQ",
                     "members": [
                       {
-                        "type": "TOKEN",
+                        "type": "IMMEDIATE_TOKEN",
                         "content": {
                           "type": "PREC",
                           "value": 1,
@@ -824,6 +836,26 @@
         }
       ]
     },
+    "let_annex": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "STRING",
+              "value": "%"
+            }
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_annex_body"
+        }
+      ]
+    },
     "let": {
       "type": "SEQ",
       "members": [
@@ -835,12 +867,17 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "binder"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "let_annex"
+              },
+              "named": true,
+              "value": "annex"
             },
             {
               "type": "SYMBOL",
-              "name": "annex"
+              "name": "binder"
             }
           ]
         },
