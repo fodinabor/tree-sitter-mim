@@ -206,6 +206,10 @@
         "named": true
       },
       {
+        "type": "sigma",
+        "named": true
+      },
+      {
         "type": "string_literal",
         "named": true
       },
@@ -876,6 +880,10 @@
           "named": true
         },
         {
+          "type": "group",
+          "named": true
+        },
+        {
           "type": "pi_domain",
           "named": true
         }
@@ -983,6 +991,40 @@
         },
         {
           "type": "guard",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sigma",
+    "named": true,
+    "fields": {
+      "alias": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annex",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "battern",
+          "named": true
+        },
+        {
+          "type": "group",
           "named": true
         }
       ]
@@ -1222,6 +1264,10 @@
   },
   {
     "type": "and",
+    "named": false
+  },
+  {
+    "type": "as",
     "named": false
   },
   {

@@ -307,6 +307,7 @@ module.exports = grammar({
       $.uniq,
       $.array,
       $.pack,
+      $.sigma,
       $.tuple,
       $.match,
     )),
@@ -390,15 +391,17 @@ module.exports = grammar({
       "→"
     ),
 
-    pi: $ => prec.left(choice(
-      seq(prec(PREC.pi, $.pi_domain), $._arrow, $.expression),
+    pi: $ => prec.left(1, choice(
+      // TODO:
+      seq(tuple_pattern($, "[", "]", $.battern), $._arrow, $.expression),
+      seq(tuple_pattern($, "{", "}", $.battern), $._arrow, $.expression),
       seq("Cn", $.pi_domain),
-      seq("Fn", prec(PREC.pi, $.pi_domain), $._arrow, $.expression),
+      seq("Fn", prec(PREC.pi, $.pi_domain), optional(seq($._arrow, $.expression))),
     )),
 
     lambda: $ => choice(
       seq(
-        $._lm, prec(PREC.pi, $.lam_domain),
+        $._lm, repeat1(prec(PREC.pi, $.lam_domain)),
         optional(seq(":", $.expression)),
         "=", $.expression,
       ),
@@ -452,6 +455,16 @@ module.exports = grammar({
       $.expression,
       choice("›", "⟩", ">"),
     ),
+
+    sigma: $ => prec(-1, seq(
+      tuple_pattern($, "[", "]", $.battern),
+      optional(
+        seq(
+          "as",
+          field("alias", $._name),
+        )
+      )
+    )),
 
     tuple: $ => seq(
       "(",

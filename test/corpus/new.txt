@@ -92,5 +92,23 @@ lam foo [[Nat] -> Nat] = 0
 		name: (identifier)
 		(battern
 			(battern
-				type: (pi (battern (battern type: (primitive))) (primitive))))
+				type: (pi (battern type: (primitive)) (primitive))))
 		value: (int_literal)))
+
+=====
+stupid app lambda
+=====
+
+let foo = fn mem (a: Nat) = 0;
+
+---
+
+(source_file
+	(let
+		(pattern (identifier))
+		value: (lambda
+			(pattern (identifier))
+			(pattern
+				(pattern (identifier) type: (primitive)))
+			(int_literal))))
+
