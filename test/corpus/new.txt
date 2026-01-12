@@ -1,0 +1,123 @@
+=====
+simple let declaration
+=====
+
+let x = 3;
+
+---
+
+(source_file
+	(let
+		(pattern (identifier))
+		value: (int_literal)))
+
+=====
+implicit pattern
+=====
+
+con foo {A: *} = ();
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(implicit (battern (identifier) type: (primitive)))
+		value: (tuple)))
+
+=====
+multiple paren domains
+=====
+
+con foo (n: Nat) (m: Nat) = ();
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(pattern (pattern (identifier) type: (primitive)))
+		(pattern (pattern (identifier) type: (primitive)))
+		value: (tuple)))
+
+=====
+simple group
+=====
+
+let (a b: Nat) = 0;
+
+---
+
+(source_file
+	(let
+		(pattern (group (identifier) (identifier) type: (primitive)))
+		value: (int_literal)))
+
+=====
+where semicolon
+=====
+
+con t() = body
+	where
+	    con body (acc: A) = head;
+	end
+end;
+
+=====
+annex float whoopsie
+=====
+
+let x = %test.foo.bar;
+
+---
+
+(source_file
+	(let
+		(pattern (identifier))
+		value: (annex
+			module: (identifier)
+			name: (identifier)
+			subtag: (identifier))))
+
+=====
+fake battern
+=====
+
+lam foo [[Nat] -> Nat] = 0
+
+---
+
+(source_file
+	(lam
+		name: (identifier)
+		(battern
+			(battern
+				type: (pi (battern type: (primitive)) (primitive))))
+		value: (int_literal)))
+
+=====
+stupid app lambda
+=====
+
+let foo = fn mem (a: Nat) = 0;
+
+---
+
+(source_file
+	(let
+		(pattern (identifier))
+		value: (lambda
+			(pattern (identifier))
+			(pattern
+				(pattern (identifier) type: (primitive)))
+			(int_literal))))
+
+=====
+let annex
+=====
+
+let %test.foo = 0;
+
+---
+
+(source_file (let (annex module: (identifier) name: (identifier)) value: (int_literal)))

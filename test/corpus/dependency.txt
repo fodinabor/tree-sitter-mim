@@ -6,7 +6,7 @@ import compile;
 
 ---
 
-(source_file (import (identifier)))
+(source_file (import (value_identifier)))
 
 =====
 multiple import
@@ -17,9 +17,9 @@ import compile;
 import foo;
 
 (source_file
-	(import (identifier))
-	(import (identifier))
-	(import (identifier))
+	(import (value_identifier))
+	(import (value_identifier))
+	(import (value_identifier))
 )
 
 =====
@@ -30,7 +30,7 @@ plugin mem;
 
 ---
 
-(source_file (plugin (identifier)))
+(source_file (plugin (value_identifier)))
 
 =====
 multiple plugins
@@ -43,9 +43,9 @@ plugin blub;
 ---
 
 (source_file
-	(plugin (identifier))
-	(plugin (identifier))
-	(plugin (identifier))
+	(plugin (value_identifier))
+	(plugin (value_identifier))
+	(plugin (value_identifier))
 )
 
 =====
@@ -61,11 +61,11 @@ plugin blub;
 ---
 
 (source_file
-	(plugin (identifier))
-	(import (identifier))
-	(plugin (identifier))
-	(import (identifier))
-	(plugin (identifier))
+	(plugin (value_identifier))
+	(import (value_identifier))
+	(plugin (value_identifier))
+	(import (value_identifier))
+	(plugin (value_identifier))
 )
 
 

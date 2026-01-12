@@ -8,14 +8,16 @@ lam %core.minus: Idx s = (0:(Idx s), a);
 
 (source_file
 	(lam
-		name: (annex)
-		type: (primitive_type (identifier))
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
+		type: (primitive_type (value_identifier))
 		value:
 			(tuple
 				(annotated
 					value: (int_literal)
-					type: (tuple (primitive_type (identifier))))
-				(identifier))))
+					type: (tuple (primitive_type (value_identifier))))
+				(value_identifier))))
 
 =====
 lam paren
@@ -27,10 +29,12 @@ lam %core.minus (s: Nat) (a: Idx s): Idx s = 0;
 
 (source_file
 	(lam
-		name: (annex)
-		(pattern (pattern (identifier) type: (primitive_type)))
-		(pattern (pattern (identifier) type: (primitive_type (identifier))))
-		type: (primitive_type (identifier))
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
+		(pattern (pattern (value_identifier) type: (primitive_type)))
+		(pattern (pattern (value_identifier) type: (primitive_type (value_identifier))))
+		type: (primitive_type (value_identifier))
 		value: (int_literal)))
 
 =====
@@ -43,9 +47,11 @@ lam %core.minus [s: Nat]: Idx s = 0;
 
 (source_file
 	(lam
-		name: (annex)
-		(pattern (pattern (identifier) type: (primitive_type)))
-		type: (primitive_type (identifier))
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
+		(pattern (pattern (value_identifier) type: (primitive_type)))
+		type: (primitive_type (value_identifier))
 		value: (int_literal)))
 
 =====
@@ -58,10 +64,12 @@ lam %core.minus {s: Nat} (a: Idx s): Idx s = 0;
 
 (source_file
 	(lam
-		name: (annex)
-		(pattern (pattern (identifier) type: (primitive_type)))
-		(pattern (pattern (identifier) type: (primitive_type (identifier))))
-		type: (primitive_type (identifier))
+		name: (annex
+			module: (value_identifier)
+			name: (value_identifier))
+		(pattern (pattern (value_identifier) type: (primitive_type)))
+		(pattern (pattern (value_identifier) type: (primitive_type (value_identifier))))
+		type: (primitive_type (value_identifier))
 		value: (int_literal)))
 
 =====
@@ -74,6 +82,6 @@ lam foo: Nat = (3);
 
 (source_file
 	(lam
-		name: (identifier)
+		name: (value_identifier)
 		type: (primitive_type)
 		value: (tuple (int_literal))))

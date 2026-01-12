@@ -9,7 +9,7 @@ let x = 3: Idx 4;
 (source_file
 	(let
 		(pattern
-			(identifier))
+			(value_identifier))
 		value: (annotated
 			value: (int_literal)
 			type: (primitive_type (int_literal)))))
@@ -25,11 +25,11 @@ let x = foo bar 0;
 (source_file
 	(let
 		(pattern
-			(identifier))
+			(value_identifier))
 		value: (application
 			(application
-				(identifier)
-				(identifier))
+				(value_identifier)
+				(value_identifier))
 			(int_literal))))
 
 =====
@@ -43,11 +43,11 @@ let x = foo @ bar 0;
 (source_file
 	(let
 		(pattern
-			(identifier))
+			(value_identifier))
 		value: (application
-			(identifier)
+			(value_identifier)
 			(application
-				(identifier)
+				(value_identifier)
 				(int_literal)))))
 
 =====
@@ -61,10 +61,10 @@ let x = (0, 0)#foo 2;
 (source_file
 	(let
 		(pattern
-			(identifier))
+			(value_identifier))
 		value: (application
 			(extraction
-				(tuple (int_literal) (int_literal)) (identifier))
+				(tuple (int_literal) (int_literal)) (value_identifier))
 				(int_literal))))
 
 =====
@@ -80,17 +80,17 @@ let x = a b
 (source_file
 	(let
 		(pattern
-			(identifier))
+			(value_identifier))
 		value: (where
 			(application
-				(identifier)
-				(identifier))
+				(value_identifier)
+				(value_identifier))
 			(lam
-				name: (identifier)
+				name: (value_identifier)
 				(pattern)
 				value: (application
-					(identifier)
-					(identifier))))))
+					(value_identifier)
+					(value_identifier))))))
 
 =====
 nested where
@@ -111,24 +111,27 @@ con seq () =
 
 (source_file
 	(lam
-		name: (identifier)
+		name: (value_identifier)
 		(pattern)
 		value: (where
 			(int_literal)
 			(lam
-				name: (identifier)
+				name: (value_identifier)
 				(pattern)
 				value: (where
 					(let
-						(pattern (identifier))
+						(pattern (value_identifier))
 						value: (application
-							(annex)
-							(tuple (identifier) (identifier))))
+							(annex
+								module: (value_identifier)
+								name: (value_identifier)
+								subtag: (value_identifier))
+							(tuple (value_identifier) (value_identifier))))
 					(tuple)
 					(lam
-						name: (identifier)
+						name: (value_identifier)
 						(pattern)
-						value: (identifier)))))))
+						value: (value_identifier)))))))
 
 =====
 fib_seq nested where
@@ -150,37 +153,40 @@ con seq {A: Nat} =
 
 (source_file
 	(lam
-		name: (identifier)
+		name: (value_identifier)
 		(pattern
-			(pattern (identifier) type: (primitive_type)))
+			(pattern (type_identifier) type: (primitive_type)))
 		value: (where
 			(application
-				(identifier)
-				(tuple (int_literal) (identifier)))
+				(value_identifier)
+				(tuple (int_literal) (value_identifier)))
 			(lam
-				name: (identifier)
+				name: (value_identifier)
 				(pattern
-					(pattern (identifier) type: (primitive_type))
-					(pattern (identifier) type: (identifier)))
+					(pattern (value_identifier) type: (primitive_type))
+					(pattern (value_identifier) type: (type_identifier)))
 				value: (where
 					(let
-						(pattern (identifier))
-						value: (annex))
+						(pattern (value_identifier))
+						value: (annex
+							module: (value_identifier)
+							name: (value_identifier)
+							subtag: (value_identifier)))
 					(application
 						(extraction
-							(tuple (identifier) (identifier))
-							(identifier))
+							(tuple (value_identifier) (value_identifier))
+							(value_identifier))
 						(tuple))
 					(lam
-						name: (identifier)
+						name: (value_identifier)
 						(pattern)
-						value: (identifier))
+						value: (value_identifier))
 					(lam
-						name: (identifier)
+						name: (value_identifier)
 						(pattern)
 						value: (application
-							(identifier)
-							(identifier))))))))
+							(value_identifier)
+							(value_identifier))))))))
 
 =====
 nested where 2
@@ -200,26 +206,26 @@ con seq {A: Nat} =
 
 (source_file
 	(lam
-		name: (identifier)
+		name: (value_identifier)
 		(pattern
-			(pattern (identifier) type: (primitive_type)))
+			(pattern (type_identifier) type: (primitive_type)))
 		value: (where
-			(identifier)
+			(value_identifier)
 			(lam
-				name: (identifier)
+				name: (value_identifier)
 				(pattern)
 				value: (where
-					(identifier)
+					(value_identifier)
 					(lam
-						name: (identifier)
+						name: (value_identifier)
 						(pattern)
-						value: (identifier))))
+						value: (value_identifier))))
 			(lam
-				name: (identifier)
+				name: (value_identifier)
 				(pattern)
 				value: (application
-					(identifier)
-					(identifier))))))
+					(value_identifier)
+					(value_identifier))))))
 
 =====
 no semicolon
@@ -235,16 +241,16 @@ con f = exit;
 
 (source_file
 	(lam
-		name: (identifier)
+		name: (value_identifier)
 		value: (where
-			(identifier)
+			(value_identifier)
 			(lam
-				name: (identifier)
+				name: (value_identifier)
 				(pattern)
-				value: (identifier))))
+				value: (value_identifier))))
 	(lam
-		name: (identifier)
-		value: (identifier)))
+		name: (value_identifier)
+		value: (value_identifier)))
 
 =====
 annex float lit
@@ -256,5 +262,8 @@ con continue = %core.nat.add;
 
 (source_file
 	(lam
-		name: (identifier)
-		value: (annex)))
+		name: (value_identifier)
+		value: (annex
+			module: (value_identifier)
+			name: (value_identifier)
+			subtag: (value_identifier))))

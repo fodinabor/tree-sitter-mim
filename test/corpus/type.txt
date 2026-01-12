@@ -7,7 +7,7 @@ let x: Nat = 0;
 ---
 
 (source_file
-	(let (pattern (identifier) type: (primitive_type)) value: (int_literal)))
+	(let (pattern (value_identifier) type: (primitive_type)) value: (int_literal)))
 
 =====
 nat type bin
@@ -18,7 +18,7 @@ let x: Nat = 0b1011;
 ---
 
 (source_file
-	(let (pattern (identifier) type: (primitive_type)) value: (int_literal)))
+	(let (pattern (value_identifier) type: (primitive_type)) value: (int_literal)))
 
 =====
 nat type nex
@@ -29,7 +29,7 @@ let x: Nat = 0xaff0;
 ---
 
 (source_file
-	(let (pattern (identifier) type: (primitive_type)) value: (int_literal)))
+	(let (pattern (value_identifier) type: (primitive_type)) value: (int_literal)))
 
 =====
 idx type
@@ -47,7 +47,7 @@ let x: Nat -> Nat = 0;
 
 (source_file
 	(let
-		(pattern (identifier)
+		(pattern (value_identifier)
 			type: (function_type (primitive_type) (primitive_type)))
 		value: (int_literal)))
 
@@ -62,7 +62,7 @@ let x: <<2; Nat>> = 0;
 (source_file
 	(let
 		(pattern
-			(identifier)
+			(value_identifier)
 			type: (array_type size: (int_literal) type: (primitive_type)))
 		value: (int_literal)))
 
@@ -76,7 +76,7 @@ let x: <<2; Nat>> -> «3; Bool» = 0;
 
 (source_file
 	(let
-		(pattern (identifier)
+		(pattern (value_identifier)
 			type: (function_type
 				(array_type size: (int_literal) type: (primitive_type))
 				(array_type size: (int_literal) type: (primitive_type))))
@@ -92,7 +92,7 @@ let x: Nat -> Idx 8 -> * = 0;
 
 (source_file
 	(let
-		(pattern (identifier)
+		(pattern (value_identifier)
 			type: (function_type
 				(primitive_type)
 				(function_type
@@ -111,10 +111,10 @@ let x: [s: Nat] -> Idx s = 0;
 
 (source_file
 	(let
-		(pattern (identifier)
+		(pattern (value_identifier)
 			type: (function_type
-				(pattern (pattern (identifier) type: (primitive_type)))
-				(primitive_type (identifier))))
+				(pattern (pattern (value_identifier) type: (primitive_type)))
+				(primitive_type (value_identifier))))
 		value: (int_literal)))
 
 =====
@@ -127,12 +127,12 @@ let x: [R: Ring] -> let a = 3; <<a; Nat>> = 0;
 
 (source_file
 	(let
-		(pattern (identifier)
+		(pattern (value_identifier)
 			type: (function_type
-				(pattern (pattern (identifier) type: (identifier)))
+				(pattern (pattern (type_identifier) type: (type_identifier)))
 				(where
-					(let (pattern (identifier)) value: (int_literal))
+					(let (pattern (value_identifier)) value: (int_literal))
 					(array_type
-						size: (identifier)
+						size: (value_identifier)
 						type: (primitive_type)))))
 		value: (int_literal)))
